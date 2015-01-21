@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+// Add wrapper for functional tests / iframe loading / cookie support
+var resourceMiddleware = require('buster/node_modules/buster-server-cli/node_modules/ramp-resources/lib/resource-middleware.js');
+
+// go double deep
+
+// create wrapper for create function
+// to get access to the middleware
+resourceMiddleware.__original_create = resourceMiddleware.create;
+resourceMiddleware.create = function resourceMiddleware_create_wrapper()
+{
+  var middleware = this.__original_create.apply(this, arguments);
+
+  // wrap respond function to allow proxy non-prefixed resource requests
+  middleware.__original_respond = middleware.respond;
+  middleware.respond = function resourceMiddleware_create_respond_wrapper(req, res)
+  {
+    var modifier, busterContextPathRE = /(?:^|; )buster_contextPath=([^;]+)(;|$)/;
+
+    // check if path modifier cookie present
+    // and that resolved resource mount exists
+    if (req.headers.cookie
+      && (modifier = (req.headers.cookie.match(busterContextPathRE) || [])[1])
+      && ((this.mountPoints() || []).indexOf(modifier) != -1)
+      )
+    {
+      // adjust req.url
+      req.url = modifier + req.url.replace(busterContextPathRE, '$2');
+    }
+
+    return this.__original_respond(req, res);
+  }
+
+  return middleware;
+}
+
+// proceed as normal
+require('buster/bin/buster-server');

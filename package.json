@@ -1,0 +1,28 @@
+{
+  "name": "buster-rendr-functional-tests",
+  "version": "0.1.0",
+  "description": "Functional tests helper for Rendr-powered sites in BusterJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alexindigo/buster-rendr-functional-tests.git"
+  },
+  "bin": {
+    "buster-server": "./bin/buster-server"
+  },
+  "peerDependencies": {
+    "buster": "^0.7.13"
+  },
+  "keywords": [
+    "buster",
+    "rendr",
+    "test",
+    "tests",
+    "functional"
+  ],
+  "author": "Alex Indigo <iam@alexindigo.com>",
+  "license": "MIT"
+}
