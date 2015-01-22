@@ -19,31 +19,31 @@ Just include `buster-rendr-functional-tests` as extension,
 list proxied paths as resources, see [Proxy resources](http://docs.busterjs.org/en/latest/modules/buster-configuration/#proxy-resources).
 
 ```javascript
-  'Functional tests':
+'Functional tests':
+{
+  environment: 'browser',
+  tests:
+  [
+    'tests/functional/**/*.js'
+  ],
+  resources:
+  [
+    // provide proxy paths, "/" is occupied by buster itself
+    // so provide some alternative, like "/index"
+    {path: '/index', backend: 'http://localhost:3030/'},
+    {path: '/js', backend: 'http://localhost:3030/js'},
+    {path: '/css', backend: 'http://localhost:3030/css'},
+    {path: '/api', backend: 'http://localhost:3030/api'},
+  ],
+  extensions:
+  [
+    require('buster-rendr-functional-tests')
+  ],
+  'buster-rendr-functional-tests':
   {
-    environment: 'browser',
-    tests:
-    [
-      'tests/functional/**/*.js'
-    ],
-    resources:
-    [
-      // provide proxy paths, "/" is occupied by buster itself
-      // so provide some alternative, like "/index"
-      {path: '/index', backend: 'http://localhost:3030/'},
-      {path: '/js', backend: 'http://localhost:3030/js'},
-      {path: '/css', backend: 'http://localhost:3030/css'},
-      {path: '/api', backend: 'http://localhost:3030/api'},
-    ],
-    extensions:
-    [
-      require('buster-rendr-functional-tests')
-    ],
-    'buster-rendr-functional-tests':
-    {
-      timeout: 120 // seconds
-    }
+    timeout: 120 // seconds
   }
+}
 ```
 
 ### .load(uri, [callback])
@@ -110,6 +110,32 @@ Simulates user's typing, with all related events and proper timing.
 
     done();
   });
+}
+```
+
+### .focus(selector|target)
+
+Makes sure focus event is triggered on the provided element.
+
+*Note: `.type` uses it internally. It's a synchronous function.*
+
+```javascript
+'Test': function(done)
+{
+  this.focus('[data-action=searchForm]');
+}
+```
+
+### .blur(selector|target)
+
+Makes sure blur event is triggered on the provided element.
+
+*Note: It's a synchronous function.*
+
+```javascript
+'Test': function(done)
+{
+  this.blur('[data-action=searchForm]');
 }
 ```
 
@@ -192,6 +218,64 @@ to allow it to catch newly created elements.
 }
 
 ```
+
+### .enhance(callback)
+
+Provides means to enhance testable environment by enhancing in-iframe window object.
+
+*Note: Enhance handler function will called bound to the test object.*
+
+```javascript
+setUp: function(done)
+{
+  // load new app's homepage for each test
+  this.load('/index').wait('postPageRender', done);
+
+  this.enhance(function(iframeWindow)
+  {
+    // channel App's console.log output into test reporting
+    iframeWindow.console.log = console.log.bind(console);
+  });
+}
+```
+
+## PhantomJS
+
+At the moment PhantomJS uses older version of webkit
+that doesn't support `Function.prototype.bind`.
+As workaround you can add `es5-shim` to the list of libraries:
+
+```javascript
+'Functional tests':
+{
+  environment: 'browser',
+  libs:
+  [
+    // PhantomJS - https://github.com/ariya/phantomjs/issues/10522
+    'assets/js/vendor/es5-shim.js'
+  ],
+  tests:
+  [
+    'tests/functional/**/*.js'
+  ]
+}
+```
+
+And add `bind` to the test page loaded in iframe:
+
+```javascript
+setUp: function(done)
+{
+  // load new app's homepage for each test
+  this.load('/index').wait('postPageRender', done);
+
+  this.enhance(function(iframeWindow)
+  {
+    iframeWindow.Function.prototype.bind = Function.prototype.bind;
+  });
+}
+```
+
 
 ## TODO
 

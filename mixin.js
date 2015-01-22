@@ -48,9 +48,12 @@
       // get jQuery reference
       i$ = iwin.$;
 
+      // adjust window object with custom handler
+      this._enhanceHandler.call(this, iwin);
+
       // return gathered data
       callback(iframe, i$, iwin, idoc);
-    };
+    }.bind(this);
 
     document.body.appendChild(iframe);
   }
@@ -96,6 +99,11 @@
       // like typing (keydown, keyup) and touchng (touchstart, touchend)
       test.testCase._interactionDelay = options.interaction_delay || 100;
 
+      // Default enhance handler is empty function
+      // could be overwritten via .enhance method
+      // accepts window object of the iframe being tested
+      test.testCase._enhanceHandler = noop;
+
       // transitionEnd multiname, allow to adjust
       test.testCase._transitionEndEvents = 'transitionend webkitTransitionEnd transitionEnd';
 
@@ -119,7 +127,7 @@
         // should be gone when buster-proxy allows unprefixed requests
         document.cookie = 'buster_contextPath='+buster.env.contextPath+';path=/';
 
-        loadInIframe(uriPath, function(iframe, $, window, document)
+        loadInIframe.call(this, uriPath, function(iframe, $, window, document)
         {
           this._waitForApp(window, function(App)
           {
@@ -138,6 +146,14 @@
 
         return this;
       };
+
+      // Enhances in-iframe window object, for custom per test/suite cases
+      // Stores handler function until in-iframe window object is available
+      test.testCase.enhance = function functional_mixin_enhance(handler)
+      {
+        this._enhanceHandler = handler;
+        return this;
+      }
 
       // Waits for the provided events triggered on the App object
       test.testCase.wait = function functional_mixin_wait(eventName, callback)
