@@ -11,6 +11,18 @@ Requires: [BusterJS](http://busterjs.org/) as peer dependency.
 npm install buster-rendr-functional-tests --save-dev
 ```
 
+Add following snippet to your project's `package.json` to allow `buster-server` support
+proxying without session prefixes.
+
+```
+"scripts":
+{
+  "postinstall": "rm ./node_modules/.bin/buster-server 2>/dev/null; cp ./node_modules/buster-rendr-functional-tests/bin/buster-server ./node_modules/.bin/buster-server"
+},
+```
+
+*You might need to run `npm run-script postinstall` for the first time.*
+
 ## Examples
 
 ### Config
