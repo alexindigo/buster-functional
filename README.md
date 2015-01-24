@@ -17,7 +17,7 @@ proxying without session prefixes.
 ```
 "scripts":
 {
-  "postinstall": "rm ./node_modules/.bin/buster-server 2>/dev/null; cp ./node_modules/buster-rendr-functional-tests/bin/buster-server ./node_modules/.bin/buster-server"
+  "postinstall": "test ! -d ./node_modules/buster-rendr-functional-tests || ./node_modules/buster-rendr-functional-tests/bin/install_wrapper"
 },
 ```
 

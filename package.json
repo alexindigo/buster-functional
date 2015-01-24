@@ -1,6 +1,6 @@
 {
   "name": "buster-rendr-functional-tests",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Functional tests helper for Rendr-powered sites in BusterJS",
   "main": "index.js",
   "scripts": {
