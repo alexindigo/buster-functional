@@ -88,7 +88,7 @@
 
       // Delay all the callbacks by specified amount
       // mostly used for visualization
-      test.testCase.delay = options.delay || 100;
+      test.testCase.delay = options.delay || 50;
 
       // Cooldown period, default pausng time for
       // reccurent waiting procedures
@@ -191,27 +191,11 @@
         // and keep them in more reabable flow in the test
         setTimeout(function()
         {
-          // first touchstart
-          target.trigger(this._createTouchEvent('touchstart', target));
-          setTimeout(function()
-          {
-            // then touchend after reasonable amout of time
-            target.trigger(this._createTouchEvent('touchend', target));
+          // list events to trigger asynchronously
+          // and group events needed to be triggered synchronously
+          // as second dimension array
+          this._triggerEvents(target, ['touchstart', 'touchend', ['mousedown', 'mouseup', 'mouseclick']], target, callback);
 
-            // and emulate desktop browser events
-            // because mobile browsers do
-            setTimeout(function()
-            {
-              target.trigger(this._createTouchEvent('mousedown', target));
-              target.trigger(this._createTouchEvent('mouseup', target));
-              target.trigger(this._createTouchEvent('mouseclick', target));
-
-              // allow all the app handlers to do their job
-              setTimeout(this._delayedCallback.bind(this, callback), this._interactionDelay);
-
-            }.bind(this), this._interactionDelay);
-
-          }.bind(this), this._interactionDelay);
         }.bind(this), this.delay);
 
         return this;
@@ -233,24 +217,10 @@
           // still have something to type
           if (char)
           {
-            // follow standard event sequence
-            target.trigger(this._createTypeEvent('keydown', char));
-
-            // after keydown follows keypress
-            target.trigger(this._createTypeEvent('keypress', char));
-
-            // update target
-            target[0].value = target[0].value + char;
-
-            // after keypress follows keyup
-            setTimeout(function()
-            {
-              target.trigger(this._createTypeEvent('keyup', char));
-
-              // after keyup proceed to the next char
-              setTimeout(enterChar.bind(this), this._interactionDelay);
-
-            }.bind(this), this._interactionDelay);
+            // list events to trigger asynchronously
+            // and group events needed to be triggered synchronously
+            // as second dimension array
+            this._triggerEvents(target, [['keydown', 'keypress'], 'keyup'], char, enterChar.bind(this));
           }
           else
           {
@@ -341,6 +311,68 @@
 
       // --- Not public methods
 
+      // Triggers series of events
+      // accepts target (as jquery object)
+      // and list of events (grouped for single tick execution)
+      // followed by final callback function
+      // Extra parameteres will passed to the specific events
+      // but callback is always last one
+      test.testCase._triggerEvents = function functional_mixin__triggerEvents(target, events, callback)
+      {
+        var i, extras, event, eventObject;
+
+        // callback is the last one
+        callback = agruments[agruments.length-1];
+        // and rest are the extras
+        extras = Array.prototype.slice.call(agruments, 2, -1);
+
+        // get first event name and built proper event object out of it
+        event = events.shift();
+
+        // eventName could be a string or group of events triggered within same tick
+        event = typeof event == 'string' ? [event] : event;
+
+        // loop through event group and trigger them
+        for (i=0; i<event.length; i++)
+        {
+          // detect key- events from touch- events
+          // TODO: Add support for mouse- events
+          eventObject = this[event[i].match(/^key/) ? '_createTypeEvent' : '_createTouchEvent' ].apply(this, [event[i]].concat(extras));
+
+          // trigger event on target
+          target.trigger(eventObject);
+
+          // respect .preventDefault() calls
+          if (eventObject.defaultPrevented || (typeof eventObject.isDefaultPrevented == 'function' && eventObject.isDefaultPrevented()))
+          {
+            // terminate here
+            this._delayedCallback(callback);
+            return;
+          }
+
+          // TODO: Make it more generic
+          // and support custom after-events
+          // but for now just add chars after key press
+          if (event[i] == 'keypress')
+          {
+            // for triggerings key events, first extra is char
+            target[0].value = target[0].value + extras[0];
+          }
+        }
+
+        // finished with the current tick,
+        // come back later and trigger rest of the events
+        // or if no events left proceed with callback
+        if (events.length)
+        {
+          setTimeout(this._triggerEvents.bind.apply(this, [this].concat([target], [events], extras, callback), this._interactionDelay);
+          return;
+        }
+
+        // nothing left, proceed with callback
+        this._delayedCallback(callback);
+      };
+
       // Creates touch event like real boyz (browsers) do
       test.testCase._createTouchEvent = function functional_mixin__createTypeEvent(type, target)
       {
@@ -424,7 +456,7 @@
             };
 
         return this.$.Event(type, keyEvent);
-      }
+      };
 
       // Delayes callback function
       test.testCase._delayedCallback = function functional_mixin__delayedCallback(callback, delay)
