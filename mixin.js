@@ -194,6 +194,7 @@
           // list events to trigger asynchronously
           // and group events needed to be triggered synchronously
           // as second dimension array
+          // and pass extra arguments for createEvent function
           this._triggerEvents(target, ['touchstart', 'touchend', ['mousedown', 'mouseup', 'mouseclick']], target, callback);
 
         }.bind(this), this.delay);
@@ -321,10 +322,10 @@
       {
         var i, extras, event, eventObject;
 
+        // rest are the extras
+        extras = Array.prototype.slice.call(arguments, 2, -1);
         // callback is the last one
-        callback = agruments[agruments.length-1];
-        // and rest are the extras
-        extras = Array.prototype.slice.call(agruments, 2, -1);
+        callback = arguments[arguments.length-1];
 
         // get first event name and built proper event object out of it
         event = events.shift();
@@ -337,7 +338,7 @@
         {
           // detect key- events from touch- events
           // TODO: Add support for mouse- events
-          eventObject = this[event[i].match(/^key/) ? '_createTypeEvent' : '_createTouchEvent' ].apply(this, [event[i]].concat(extras));
+          eventObject = this[event[i].match(/^key/) ? '_createTypeEvent' : '_createTouchEvent'].apply(this, [event[i]].concat(extras));
 
           // trigger event on target
           target.trigger(eventObject);
@@ -365,7 +366,7 @@
         // or if no events left proceed with callback
         if (events.length)
         {
-          setTimeout(this._triggerEvents.bind.apply(this, [this].concat([target], [events], extras, callback), this._interactionDelay);
+          setTimeout(this._triggerEvents.bind.apply(this._triggerEvents, [this].concat([target], [events], extras, callback)), this._interactionDelay);
           return;
         }
 
