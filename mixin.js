@@ -202,6 +202,19 @@
         return this;
       };
 
+      // Swipes
+      test.testCase.scroll = function functional_mixin_scroll(target, callback)
+      {
+        target = (typeof target == 'string' ? this.$(target) : target).first();
+        var position = this.$(target).offset().top + (this.$(target).outerHeight(true) / 2);
+
+        this.$('html, body').animate({
+          scrollTop: position
+        }, 200, function() {
+            callback();
+        });
+      };
+
       // Types into input field
       test.testCase.type = function functional_mixin_type(target, text, callback)
       {
