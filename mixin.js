@@ -202,7 +202,7 @@
         return this;
       };
 
-      // Swipes
+      // Scrolls page to the top by half of the height of the target element
       test.testCase.scroll = function functional_mixin_scroll(target, callback)
       {
         target = (typeof target == 'string' ? this.$(target) : target).first();
@@ -211,8 +211,10 @@
           scrollTop: position
         };
         setTimeout(function() {
-          this.$('html, body').animate(scroll, this._interactionDelay, callback);
+          this.$('html, body').animate(scroll, this._interactionDelay, this._delayedCallback.bind(this, callback));
         }.bind(this), this.delay);
+
+        return this;
       };
 
       // Types into input field
