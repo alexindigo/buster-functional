@@ -207,12 +207,12 @@
       {
         target = (typeof target == 'string' ? this.$(target) : target).first();
         var position = this.$(target).offset().top + (this.$(target).outerHeight(true) / 2);
-
-        this.$('html, body').animate({
+        var scroll = {
           scrollTop: position
-        }, 200, function() {
-            callback();
-        });
+        };
+        setTimeout(function() {
+          this.$('html, body').animate(scroll, this._interactionDelay, callback);
+        }.bind(this), this.delay);
       };
 
       // Types into input field
