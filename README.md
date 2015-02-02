@@ -125,6 +125,20 @@ Simulates user's typing, with all related events and proper timing.
 }
 ```
 
+### .scroll(selector|target, callback)
+
+Scrolls the window to the middle of the provided element.
+
+```javascript
+'Header should be hidden when user scrolls past the first item': function(done) {
+  var $header = this.$('[data-role=header]');
+  var $item = this.$('[data-itemindex=2]')
+  this.scroll(item, function() {
+    assert.isFalse($header.is(':visible'));
+  });
+}
+```
+
 ### .focus(selector|target)
 
 Makes sure focus event is triggered on the provided element.
