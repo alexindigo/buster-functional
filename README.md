@@ -125,6 +125,23 @@ Simulates user's typing, with all related events and proper timing.
 }
 ```
 
+### .select(selector|target, optionValue, [callback])
+
+Simulates user's select drop-down action, with all related events and proper timing.
+
+```javascript
+'Set value for select drop-down': function(done)
+{
+  this.select('[data-role=selectTag]', '1000', function()
+  {
+    // Check correct drop-down value is selected
+    // should have selected "1000"
+    assert.isTrue(this.$('[data-role=selectTag] > option[value=1000]').is(':selected'));
+    done();
+  });
+}
+```
+
 ### .scroll(selector|target, callback)
 
 Scrolls the window to the middle of the provided element.
