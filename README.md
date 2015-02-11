@@ -319,6 +319,9 @@ setUp: function(done)
 }
 ```
 
+## Real Life Example
+
+[Functional testing of Trulia Mobile website](https://vimeo.com/118677083) using `Buster.JS` with `buster-rendr-functional-tests` module in real browsers on mobile devices, including iPhones 6+ and 5S with iOS8/Safari, Androids 4.4 with Stock and Chrome browsers.
 
 ## TODO
 
