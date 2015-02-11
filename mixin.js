@@ -217,6 +217,25 @@
         return this;
       };
 
+      // Triggers select option element
+      test.testCase.select = function function_mixin_select(target, optionValue, callback) {
+
+        // get the first element of the selection
+        target = (typeof target == 'string' ? this.$(target) : target).first();
+
+        // sync all event handlers
+        setTimeout(function() {
+
+          this._triggerEvents(target, ['focus', 'touchstart', 'touchend', ['mousedown', 'mouseup', 'mouseclick', 'click']], target, function() {
+            target.find('option[value=' + optionValue + ']').attr('selected', true).trigger('change');
+            this._triggerEvents(target, ['blur'], target, callback);
+          });
+
+        }.bind(this), this.delay);
+
+        return this;
+      };
+
       // Types into input field
       test.testCase.type = function functional_mixin_type(target, text, callback)
       {
@@ -351,12 +370,21 @@
         // loop through event group and trigger them
         for (i=0; i<event.length; i++)
         {
-          // detect key- events from touch- events
-          // TODO: Add support for mouse- events
-          eventObject = this[event[i].match(/^key/) ? '_createTypeEvent' : '_createTouchEvent'].apply(this, [event[i]].concat(extras));
-
-          // trigger event on target
-          target.trigger(eventObject);
+          switch(event) {
+            case 'focus':
+              this.focus(target);
+              break;
+            case 'blur':
+              this.blur(target);
+              break;
+            default:
+              // detect key- events from touch- events
+              // TODO: Add support for mouse- events
+              eventObject = this[event[i].match(/^key/) ? '_createTypeEvent' : '_createTouchEvent'].apply(this, [event[i]].concat(extras));
+              // trigger event on target
+              target.trigger(eventObject);
+              break;
+          }
 
           // respect .preventDefault() calls
           if (eventObject.defaultPrevented || (typeof eventObject.isDefaultPrevented == 'function' && eventObject.isDefaultPrevented()))
