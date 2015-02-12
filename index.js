@@ -1,6 +1,7 @@
 var fs = require('fs')
   , path = require('path')
-  , injection = fs.readFileSync(path.join(__dirname, 'mixin.js'))
+  , mixin = fs.readFileSync(path.join(__dirname, 'lib/test_case_mixin.js'))
+  , mixinLoader = fs.readFileSync(path.join(__dirname, 'lib/mixin_loader.js'))
   ;
 
 module.exports =
@@ -23,11 +24,17 @@ module.exports =
   {
     conf.on('load:framework', function(rs)
     {
+      // add mixin
       rs.addResource({
           path: '/buster/functional_mixin.js',
           // and add options
-          content: injection.toString().replace(/(\}\)\(buster)(\);)/, '$1, '+JSON.stringify(this.options)+'$2')
+          content:
+          [
+            mixin.toString(),
+            mixinLoader.toString().replace(/(\}\)\(buster)(\);)/, '$1, '+JSON.stringify(this.options)+'$2')
+          ].join('\n')
       });
+
       rs.loadPath.append('/buster/functional_mixin.js');
     }.bind(this));
   },
