@@ -1,0 +1,79 @@
+var buster = require('buster')
+  , mixin  = require('../lib/test_case_mixin')
+  , assert = buster.referee.assert
+  , refute = buster.referee.refute
+  , testObject
+  ;
+
+buster.testCase('_delayedCallback',
+{
+  // prepare for test
+  setUp: function()
+  {
+    testObject = {};
+    mixin(testObject);
+  },
+
+  'Exists': function()
+  {
+    assert.isFunction(testObject._delayedCallback);
+  },
+
+  'Not fails if no callback passed': function()
+  {
+    var result = testObject._delayedCallback();
+
+    assert.equals(testObject, result);
+  },
+
+  'Calls callback after specified delay': function(done)
+  {
+    var isPreCheckCalled = false
+      , delay = 100
+      , callback = this.spy()
+      ;
+
+    testObject._delayedCallback(callback, delay);
+
+    // check it won't be called before delay is expired
+    setTimeout(function()
+    {
+      isPreCheckCalled = true;
+      refute.isTrue(callback.called);
+    }, delay-1);
+
+    setTimeout(function()
+    {
+      // make sure we did check before callingcallback
+      assert.isTrue(isPreCheckCalled);
+      assert.isTrue(callback.called);
+      // and be done
+      done();
+    }, delay);
+  },
+
+  'Calls callback after default delay, if no delay is provided': function(done)
+  {
+    var isPreCheckCalled = false
+      , callback = this.spy()
+      ;
+
+    testObject._delayedCallback(callback);
+
+    // check it won't be called before delay is expired
+    setTimeout(function()
+    {
+      isPreCheckCalled = true;
+      refute.called(callback);
+    }, testObject.delay-1);
+
+    setTimeout(function()
+    {
+      // make sure we did check before callingcallback
+      assert.isTrue(isPreCheckCalled);
+      assert.called(callback);
+      // and be done
+      done();
+    }, testObject.delay);
+  }
+});

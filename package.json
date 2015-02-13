@@ -14,7 +14,8 @@
     "buster": "~0.7.18"
   },
   "devDependencies": {
-    "buster": "~0.7.18"
+    "buster": "~0.7.18",
+    "pre-commit": "^1.0.2"
   },
   "keywords": [
     "buster",

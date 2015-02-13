@@ -1,9 +1,10 @@
-# buster-rendr-functional-tests
+# buster-functional-tests
 
-Functional tests helper for Rendr-powered sites in BusterJS.
-Adds helper functions to simulate basic user interactions.
+Functional tests helper for BusterJS. Adds helper functions to simulate basic user interactions.
 
-Requires: [BusterJS](http://busterjs.org/) as peer dependency.
+*Requires: [BusterJS](http://busterjs.org/) as peer dependency.*
+
+*Expects: [jQuery](http://jquery.com) to be present on the test target page.*
 
 ## Install
 
