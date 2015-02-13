@@ -1,5 +1,5 @@
 var buster = require('buster')
-  , mixin  = require('../lib/test_case_mixin')
+  , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
   , testObject
@@ -7,16 +7,12 @@ var buster = require('buster')
 
 buster.testCase('_trigger',
 {
-  // prepare for test
-  setUp: function()
-  {
-    testObject = {};
-    mixin(testObject);
-  },
+  // create new test object for each test
+  setUp: common.createTestObject,
 
   'Exists': function()
   {
-    assert.isFunction(testObject._trigger);
+    assert.isFunction(this.testObject._trigger);
   },
 
   'triggers provided event on the target': function()
@@ -25,7 +21,7 @@ buster.testCase('_trigger',
       , event  = {prop: Math.random()}
       ;
 
-    testObject._trigger(target, event);
+    this.testObject._trigger(target, event);
 
     assert.calledWith(target.trigger, event);
   }

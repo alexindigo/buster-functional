@@ -1,5 +1,5 @@
 var buster = require('buster')
-  , mixin  = require('../lib/test_case_mixin')
+  , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
   , testObject
@@ -7,12 +7,8 @@ var buster = require('buster')
 
 buster.testCase('_loadInIframe',
 {
-  // prepare for test
-  setUp: function()
-  {
-    testObject = {};
-    mixin(testObject);
-  },
+  // create new test object for each test
+  setUp: common.createTestObject,
 
   // clean up global mess
   tearDown: function()
@@ -22,7 +18,7 @@ buster.testCase('_loadInIframe',
 
   'Exists': function()
   {
-    assert.isFunction(testObject._loadInIframe);
+    assert.isFunction(this.testObject._loadInIframe);
   },
 
   'Creates iframe object with requested source': function()
@@ -38,14 +34,14 @@ buster.testCase('_loadInIframe',
     iwin.$ = {me: 'pretends to be jQuery object within iframe'};
 
     // stub methods called within _loadInIframe
-    this.stub(testObject, '_createIframe').returns(iframe);
-    this.spy(testObject, '_enhanceHandler');
+    this.stub(this.testObject, '_createIframe').returns(iframe);
+    this.spy(this.testObject, '_enhanceHandler');
 
     // stub document object
     global.document = {body: {appendChild: this.spy()}};
 
     // run test subject
-    testObject._loadInIframe(src, callback);
+    this.testObject._loadInIframe(src, callback);
 
     // check attach load handler
     assert.isFunction(iframe.onload);
@@ -56,7 +52,7 @@ buster.testCase('_loadInIframe',
     iframe.onload();
 
     // tried _enhanceHandler
-    assert.calledWith(testObject._enhanceHandler, iwin);
+    assert.calledWith(this.testObject._enhanceHandler, iwin);
 
     // got calback with created objects
     assert.calledWith(callback, iframe, iwin.$, iwin, idoc);

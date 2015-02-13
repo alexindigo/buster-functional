@@ -1,5 +1,5 @@
 var buster = require('buster')
-  , mixin  = require('../lib/test_case_mixin')
+  , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
   , testObject
@@ -7,12 +7,8 @@ var buster = require('buster')
 
 buster.testCase('_createIframe',
 {
-  // prepare for test
-  setUp: function()
-  {
-    testObject = {};
-    mixin(testObject);
-  },
+  // create new test object for each test
+  setUp: common.createTestObject,
 
   // clean up global mess
   tearDown: function()
@@ -22,7 +18,7 @@ buster.testCase('_createIframe',
 
   'Exists': function()
   {
-    assert.isFunction(testObject._createIframe);
+    assert.isFunction(this.testObject._createIframe);
   },
 
   'Creates iframe object with requested source': function()
@@ -31,7 +27,7 @@ buster.testCase('_createIframe',
 
     global.document = {createElement: this.stub().returns({style: {}})};
 
-    iframe = testObject._createIframe(src);
+    iframe = this.testObject._createIframe(src);
 
     assert.calledWith(global.document.createElement, 'iframe');
     assert.equals(iframe.src, src);

@@ -1,5 +1,5 @@
 var buster = require('buster')
-  , mixin  = require('../lib/test_case_mixin')
+  , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
   , testObject
@@ -7,26 +7,22 @@ var buster = require('buster')
 
 buster.testCase('Framework',
 {
-  // prepare for test
-  setUp: function()
-  {
-    testObject = {};
-    mixin(testObject);
-  },
+  // create new test object for each test
+  setUp: common.createTestObject,
 
   'All public methods return itself': function()
   {
     var method;
 
-    for (method in testObject)
+    for (method in this.testObject)
     {
-      // skip not own methods and "private" ones
-      if (method[0] == '_' || !testObject.hasOwnProperty(method) || typeof testObject[method] != 'function')
+      // get only methods that start with a letter, otherwise it's not a public method
+      if (!method.match(/^[a-z]/) || !this.testObject.hasOwnProperty(method) || typeof this.testObject[method] != 'function')
       {
         continue;
       }
 
-      refute.isNull(testObject[method].toString().match(/return this;[\s\S]*?\}$/));
+      refute.isNull(this.testObject[method].toString().match(/return this;[\s\S]*?\}$/));
     }
   }
 });
