@@ -88,8 +88,8 @@ var common =
     };
   },
 
-  // creates type object to be used for event object creation tests
-  blankTypeEvent: function(type, char)
+  // creates key object to be used for event object creation tests
+  blankKeyEvent: function(type, char)
   {
     var charCode = (type == 'keypress' ? char.charCodeAt(0) : 0)
       , key      = char.toUpperCase()

@@ -4,7 +4,7 @@ var buster = require('buster')
   , refute = buster.referee.refute
   ;
 
-buster.testCase('_createTypeEvent',
+buster.testCase('_createKeyEvent',
 {
   // create new test object for each test
   setUp: common.createTestObject,
@@ -14,15 +14,15 @@ buster.testCase('_createTypeEvent',
     var event
       , type = 'keydown'
       , char = 'k'
-      , blankTypeEvent = common.blankTypeEvent(type, char)
+      , blankKeyEvent = common.blankKeyEvent(type, char)
       ;
 
     // augment testObject with jQuery things
-    event = this.testObject._createTypeEvent(type, char);
+    event = this.testObject._createKeyEvent(type, char);
     assert.equals(common._jQuery_Event, event);
 
     // since no extend function is present check it's arguments
-    assert.calledWith(this.testObject.$.Event, type, blankTypeEvent);
+    assert.calledWith(this.testObject.$.Event, type, blankKeyEvent);
   },
 
   'Creates keypress event object with uppercase letter': function()
@@ -30,14 +30,14 @@ buster.testCase('_createTypeEvent',
     var event
       , type = 'keypress'
       , char = 'U'
-      , blankTypeEvent = common.blankTypeEvent(type, char)
+      , blankKeyEvent = common.blankKeyEvent(type, char)
       ;
 
     // augment testObject with jQuery things
-    event = this.testObject._createTypeEvent(type, char);
+    event = this.testObject._createKeyEvent(type, char);
     assert.equals(common._jQuery_Event, event);
 
     // since no extend function is present check it's arguments
-    assert.calledWith(this.testObject.$.Event, type, blankTypeEvent);
+    assert.calledWith(this.testObject.$.Event, type, blankKeyEvent);
   }
 });
