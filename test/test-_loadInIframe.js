@@ -16,11 +16,6 @@ buster.testCase('_loadInIframe',
     delete global.document;
   },
 
-  'Exists': function()
-  {
-    assert.isFunction(this.testObject._loadInIframe);
-  },
-
   'Creates iframe object with requested source': function()
   {
     var src      = 'http://example.com'

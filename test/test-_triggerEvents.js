@@ -10,7 +10,7 @@ buster.testCase('_triggerEvents',
   // create new test object for each test
   setUp: common.createTestObject,
 
-  'exists': function()
+  'Exists': function()
   {
     assert.isFunction(this.testObject._triggerEvents);
   }

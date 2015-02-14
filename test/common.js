@@ -86,6 +86,37 @@ var common =
       movementY: 0,
       which: 1
     };
+  },
+
+  // creates type object to be used for event object creation tests
+  blankTypeEvent: function(type, char)
+  {
+    var charCode = (type == 'keypress' ? char.charCodeAt(0) : 0)
+      , key      = char.toUpperCase()
+      , keyCode  = key.charCodeAt(0)
+      ;
+
+    return {
+      altKey: false,
+      charCode: charCode,
+      ctrlKey: false,
+      keyCode: keyCode,
+      metaKey: false,
+      originalEvent:
+      {
+        altKey: false,
+        charCode: charCode,
+        ctrlKey: false,
+        keyCode: keyCode,
+        keyIdentifier: 'U+00'+keyCode.toString(16),
+        metaKey: false,
+        shiftKey: false,
+        type: type,
+        which: charCode || keyCode
+      },
+      type: type,
+      which: charCode || keyCode
+    };
   }
 
 };

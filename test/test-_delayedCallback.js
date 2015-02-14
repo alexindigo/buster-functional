@@ -10,11 +10,6 @@ buster.testCase('_delayedCallback',
   // create new test object for each test
   setUp: common.createTestObject,
 
-  'Exists': function()
-  {
-    assert.isFunction(this.testObject._delayedCallback);
-  },
-
   'Not fails if no callback passed': function()
   {
     var result = this.testObject._delayedCallback();

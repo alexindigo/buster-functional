@@ -4,7 +4,7 @@
   "description": "Functional tests helper for BusterJS",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/buster-test --fail-on-focus"
+    "test": "./node_modules/.bin/buster-test --fail-on-focus --reporter specification"
   },
   "repository": {
     "type": "git",
