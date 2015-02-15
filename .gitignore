@@ -1,4 +1,6 @@
 *.log
 *.pid
 *.seed
+npm-debug.log
+coverage
 node_modules

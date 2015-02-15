@@ -1,5 +1,5 @@
 // common helpers
-var mixin = require('../lib/test_case_mixin');
+var mixin = require('../lib/functional_mixin');
 
 var common =
 {
@@ -18,6 +18,13 @@ var common =
   // center point of an element
   _targetX: function() { return common._returns_offset.left + (common._returns_width/2); },
   _targetY: function() { return common._returns_offset.top + (common._returns_height/2); },
+
+  createStubBuster: function()
+  {
+    this.stubBuster = {testRunner: {}};
+
+    this.stubBuster.testRunner.onCreate = this.stub();
+  },
 
   // expected to called within test context
   createTestObject: function()
@@ -40,6 +47,8 @@ var common =
     target.offset = this.stub().returns(common._returns_offset);
     target.width  = this.stub().returns(common._returns_width);
     target.height = this.stub().returns(common._returns_height);
+
+    target.trigger = this.stub();
 
     return target;
   },
