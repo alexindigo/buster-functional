@@ -24,6 +24,9 @@ var common =
   _targetX: function() { return common._returns_offset.left + (common._returns_width/2); },
   _targetY: function() { return common._returns_offset.top + (common._returns_height/2); },
 
+  // example uri path
+  iframeUriPath: '/example/page',
+
   // example buster_contextPath
   busterContextPath: inlineValues.busterContextPath,
 

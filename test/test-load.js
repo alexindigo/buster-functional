@@ -17,28 +17,54 @@ buster.testCase('load',
     delete global.buster;
   },
 
-  'Cleans up things on exit': function()
+  'Creates iframe:':
   {
-    var uriPath = '/example/page'
-      , callback = {me: Math.random()}
-      ;
+    setUp: function()
+    {
+      this._stubs = {};
+      this._stubs.callback = {me: Math.random()};
 
-    // prepare global
-    global.document = {cookie: '_UNMODIFIED_'};
-    global.buster   = {env: {contextPath: common.busterContextPath}};
+      // prepare global
+      global.document = {cookie: '_UNMODIFIED_'};
+      global.buster   = {env: {contextPath: common.busterContextPath}};
 
-    // prepare test subject
-    this.stub(this.testObject, '_loadInIframe');
-    this.stub(this.testObject, '_delayedCallback');
+      // prepare test subject
+      this.stub(this.testObject, '_loadInIframe');
 
-    // invoke test subject
-    this.testObject.load(uriPath, callback);
+      // invoke test subject
+      this.testObject.load(common.iframeUriPath, this._stubs.callback);
+    },
 
-    // cookie was set
-    assert.equals(global.document.cookie, common.cookieContextPath);
-    // creating iframe with passed url
-    assert.calledWith(this.testObject._loadInIframe, uriPath);
-    // callback passed to the _loadInFrame
-    assert.isFunction(this.testObject._loadInIframe.getCall(0).args[1]);
+    'Creates proxy cookie and invokes _loadInIframe': function()
+    {
+      // cookie was set
+      assert.equals(global.document.cookie, common.cookieContextPath);
+      // creating iframe with passed url
+      assert.calledWith(this.testObject._loadInIframe, common.iframeUriPath);
+      // callback passed to the _loadInFrame
+      assert.isFunction(this.testObject._loadInIframe.getCall(0).args[1]);
+
+    },
+
+    'Assigns iframe objects to the test context': function()
+    {
+      var iframe   = {me: Math.random()}
+        , $        = {me: Math.random()}
+        , window   = {me: Math.random()}
+        , document = {me: Math.random()}
+        ;
+
+      // prepare callback catcher
+      this.stub(this.testObject, '_delayedCallback');
+
+      // invoke passed callback
+      this.testObject._loadInIframe.getCall(0).args[1](iframe, $, window, document);
+
+      // check properties
+      assert.equals(this.testObject.iframe, iframe);
+      assert.equals(this.testObject.$, $);
+      assert.equals(this.testObject.window, window);
+      assert.equals(this.testObject.document, document);
+    }
   }
 });

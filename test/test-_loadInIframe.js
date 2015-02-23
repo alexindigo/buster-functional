@@ -20,8 +20,6 @@ buster.testCase('_loadInIframe',
   {
     setUp: function()
     {
-      var src = 'http://example.com';
-
       // prepare stubs
       this._stubs = {};
 
@@ -41,7 +39,12 @@ buster.testCase('_loadInIframe',
       global.document = {body: {appendChild: this.spy()}};
 
       // run test subject
-      this.testObject._loadInIframe(src, this._stubs.callback);
+      this.testObject._loadInIframe(common.iframeUriPath, this._stubs.callback);
+    },
+
+    'Passes proper src to the _createIframe': function()
+    {
+      assert.calledWith(this.testObject._createIframe, common.iframeUriPath);
     },
 
     'Appends iframe to the document': function()

@@ -105,7 +105,7 @@ buster.testCase('Loader',
       this.runner.on.getCall(1).args[1]();
 
       // top iframe set to 80px
-      assert.equals(this.document.cookie, 'buster_contextPath=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT');
+      assert.equals(this.document.cookie, common.cookieExpired);
     },
 
     'Cleans up buster_contextPath cookie on context:end': function()
@@ -114,7 +114,7 @@ buster.testCase('Loader',
       this.runner.on.getCall(2).args[1]();
 
       // top iframe set to 80px
-      assert.equals(this.document.cookie, 'buster_contextPath=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT');
+      assert.equals(this.document.cookie, common.cookieExpired);
     }
   }
 });

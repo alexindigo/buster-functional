@@ -23,7 +23,7 @@ buster.testCase('_triggerEvents',
     this.testObject._createEvent.withArgs('touchend').returns(touchendEvent);
 
     // invoke test subject
-    this.testObject._triggerEvents(target, ['touchstart', 'touchend'], target, function()
+    this.testObject._triggerEvents(target, ['touchstart', ['touchend']], target, function()
     {
       // by now it should trigger boths events
       assert.calledTwice(target.trigger);

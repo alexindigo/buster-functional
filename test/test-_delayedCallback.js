@@ -30,14 +30,14 @@ buster.testCase('_delayedCallback',
     setTimeout(function()
     {
       isPreCheckCalled = true;
-      refute.isTrue(callback.called);
-    }, delay-1);
+      refute.called(callback);
+    }, delay-10);
 
     setTimeout(function()
     {
       // make sure we did check before callingcallback
       assert.isTrue(isPreCheckCalled);
-      assert.isTrue(callback.called);
+      assert.called(callback);
       // and be done
       done();
     }, delay);
