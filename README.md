@@ -1,4 +1,4 @@
-# buster-functional-tests [![Build Status](https://img.shields.io/travis/alexindigo/buster-rendr-functional-tests/v1.0.svg)](https://travis-ci.org/alexindigo/buster-rendr-functional-tests) [![Coverage Status](https://img.shields.io/coveralls/alexindigo/buster-rendr-functional-tests/v1.0.svg)](https://coveralls.io/r/alexindigo/buster-rendr-functional-tests?branch=v1.0)
+# buster-functional-tests [![Build Status](https://img.shields.io/travis/alexindigo/buster-rendr-functional-tests/v1.0.svg?style=flat-square)](https://travis-ci.org/alexindigo/buster-rendr-functional-tests) [![Coverage Status](https://img.shields.io/coveralls/alexindigo/buster-rendr-functional-tests/v1.0.svg?style=flat-square)](https://coveralls.io/r/alexindigo/buster-rendr-functional-tests?branch=v1.0)
 
 Functional tests helper for BusterJS. Adds helper functions to simulate basic user interactions.
 
