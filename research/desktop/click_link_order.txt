@@ -1,0 +1,43 @@
+sync event mouseenter
+sync event mouseover
+sync event mousemove
+........... async event mouseenter
+........... async event mouseover
+........... async event mousemove
+
+sync event mousemove
+........... async event mousemove
+sync event mousemove
+........... async event mousemove
+
+sync event mousedown
+sync event focus
+sync event focusin
+sync event DOMFocusIn
+........... async event mousedown
+........... async event focus
+........... async event focusin
+........... async event DOMFocusIn
+sync event mouseup
+sync event click
+........... async event mouseup
+........... async event click
+
+sync event mousemove
+........... async event mousemove
+sync event mousemove
+........... async event mousemove
+
+sync event mouseleave
+sync event mouseout
+........... async event mouseleave
+........... async event mouseout
+
+// -- user clicks outside of the element
+
+sync event blur
+sync event focusout
+sync event DOMFocusOut
+........... async event blur
+........... async event focusout
+........... async event DOMFocusOut

@@ -16,40 +16,71 @@ buster.testCase('_loadInIframe',
     delete global.document;
   },
 
-  'Creates iframe object with requested source': function()
+  'Creates iframe object with requested source:':
   {
-    var src      = 'http://example.com'
-      , iwin     = {me: 'pretends to be window object within iframe'}
-      , idoc     = {me: 'pretends to be document object within iframe'}
-      , iframe   = {contentWindow: iwin, contentDocument: idoc}
-      , callback = this.spy()
-      ;
+    setUp: function()
+    {
+      var src = 'http://example.com';
 
-    // add jquery symbol
-    iwin.$ = {me: 'pretends to be jQuery object within iframe'};
+      // prepare stubs
+      this._stubs = {};
 
-    // stub methods called within _loadInIframe
-    this.stub(this.testObject, '_createIframe').returns(iframe);
-    this.spy(this.testObject, '_enhanceHandler');
+      this._stubs.iwin     = {me: 'pretends to be window object within iframe'};
+      this._stubs.idoc     = {me: 'pretends to be document object within iframe'};
+      this._stubs.iframe   = {contentWindow: this._stubs.iwin, contentDocument: this._stubs.idoc};
+      this._stubs.callback = this.spy();
 
-    // stub document object
-    global.document = {body: {appendChild: this.spy()}};
+      // add jquery symbol
+      this._stubs.iwin.$ = {me: 'pretends to be jQuery object within iframe'};
 
-    // run test subject
-    this.testObject._loadInIframe(src, callback);
+      // stub methods called within _loadInIframe
+      this.stub(this.testObject, '_createIframe').returns(this._stubs.iframe);
+      this.spy(this.testObject, '_enhanceHandler');
 
-    // check attach load handler
-    assert.isFunction(iframe.onload);
-    // check appened element
-    assert.calledWith(global.document.body.appendChild, iframe);
+      // stub document object
+      global.document = {body: {appendChild: this.spy()}};
 
-    // invoke load handler
-    iframe.onload();
+      // run test subject
+      this.testObject._loadInIframe(src, this._stubs.callback);
+    },
 
-    // tried _enhanceHandler
-    assert.calledWith(this.testObject._enhanceHandler, iwin);
+    'Appends iframe to the document': function()
+    {
+      // invoke load handler
+      this._stubs.iframe.onload();
 
-    // got calback with created objects
-    assert.calledWith(callback, iframe, iwin.$, iwin, idoc);
+      // check appened element
+      assert.calledWith(global.document.body.appendChild, this._stubs.iframe);
+    },
+
+    'Tried _enhanceHandler with iframe window object': function()
+    {
+      // invoke load handler
+      this._stubs.iframe.onload();
+
+      assert.calledWith(this.testObject._enhanceHandler, this._stubs.iwin);
+    },
+
+    'Invokes provided callback with reference to iframe objects': function()
+    {
+      // invoke load handler
+      this._stubs.iframe.onload();
+
+      // got calback with created objects
+      assert.calledWith(this._stubs.callback, this._stubs.iframe, this._stubs.iwin.$, this._stubs.iwin, this._stubs.idoc);
+    },
+
+    'Works in iframe.contentDocument-less environments': function()
+    {
+      // adjust environment to simulate
+      this._stubs.iframe.contentWindow.document = this._stubs.idoc;
+      delete this._stubs.iframe.contentDocument;
+
+      // invoke load handler
+      this._stubs.iframe.onload();
+
+      // got calback with created objects
+      assert.calledWith(this._stubs.callback, this._stubs.iframe, this._stubs.iwin.$, this._stubs.iwin, this._stubs.idoc);
+    }
   }
 });

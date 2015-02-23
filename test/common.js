@@ -1,6 +1,11 @@
 // common helpers
 var mixin = require('../lib/functional_mixin');
 
+var inlineValues =
+{
+  busterContextPath: '/example/context/path/'
+};
+
 var common =
 {
   // exposing object stubs for testing purposes
@@ -18,6 +23,13 @@ var common =
   // center point of an element
   _targetX: function() { return common._returns_offset.left + (common._returns_width/2); },
   _targetY: function() { return common._returns_offset.top + (common._returns_height/2); },
+
+  // example buster_contextPath
+  busterContextPath: inlineValues.busterContextPath,
+
+  // cookies
+  cookieExpired: 'buster_contextPath=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT',
+  cookieContextPath: 'buster_contextPath='+inlineValues.busterContextPath+';path=/',
 
   createStubBuster: function()
   {
@@ -49,6 +61,10 @@ var common =
     target.height = this.stub().returns(common._returns_height);
 
     target.trigger = this.stub();
+
+    // event methods
+    target.blur  = this.stub();
+    target.focus = this.stub();
 
     return target;
   },

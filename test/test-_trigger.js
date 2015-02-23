@@ -10,7 +10,7 @@ buster.testCase('_trigger',
   // create new test object for each test
   setUp: common.createTestObject,
 
-  'triggers provided event on the target': function()
+  'Triggers provided event on the target': function()
   {
     var target = {trigger: this.spy()}
       , event  = {prop: Math.random()}

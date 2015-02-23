@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Events playground</title>
+  </head>
+  <body>
+
+   <p>Link: <a id="the_link" href="./">[ link ]</a></p>
+
+   <p>Button: <button id="the_button">[ button ]</button>
+
+  </body>
+  <script>
+
+    // UI Events
+    // from: http://www.w3.org/TR/DOM-Level-3-Events/#events-uievents
+    // legacy: http://www.w3.org/TR/DOM-Level-3-Events/#legacy-uievent-events
+    var uiEventsLegacy = 'DOMActivate';
+    var uiEvents = 'load unload abort error select resize scroll ' + uiEventsLegacy;
+
+    // Focus Events
+    // from: http://www.w3.org/TR/DOM-Level-3-Events/#events-focusevent
+    // legacy: http://www.w3.org/TR/DOM-Level-3-Events/#legacy-focusevent-events
+    var focusEventsLegacy = 'DOMFocusIn DOMFocusOut';
+    var focusEvents = 'blur focus focusin focusout ' + focusEventsLegacy;
+
+    // Mouse Events
+    // from: http://www.w3.org/TR/DOM-Level-3-Events/#events-mouseevents
+    var mouseEvents = 'click dblclick mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup';
+
+    // Wheel Events
+    // from: http://www.w3.org/TR/DOM-Level-3-Events/#events-wheelevents
+    var wheelEvents = 'wheel';
+
+    // Input Events
+    // from: http://www.w3.org/TR/DOM-Level-3-Events/#events-inputevents
+    var inputEvents = 'beforeinput input';
+
+    // Keyboard Events
+    // from: http://www.w3.org/TR/DOM-Level-3-Events/#events-keyboardevents
+    // legacy: http://www.w3.org/TR/DOM-Level-3-Events/#legacy-keyboardevent-events
+    var keyboardEventsLegacy = 'keypress';
+    var keyboardEvents = 'keydown keyup ' + keyboardEventsLegacy;
+
+    // Touch Events
+    // from: http://www.w3.org/TR/touch-events/#list-of-touchevent-types
+    var touchEvents = 'touchstart touchend touchmove touchcancel';
+
+    // Put them all together
+    var allEvents = [uiEvents, focusEvents, mouseEvents, wheelEvents, inputEvents, keyboardEvents, touchEvents].join(' ');
+
+    // listen on objects
+    listen('the_link', allEvents, function(event)
+    {
+      console.log('sync event', event.type);
+      setTimeout(function()
+      {
+        console.log('........... async event', event.type);
+      }, 0);
+    });
+
+    listen('the_button', allEvents, function(event)
+    {
+      console.log('sync event', event.type);
+      setTimeout(function()
+      {
+        console.log('........... async event', event.type);
+      }, 0);
+    });
+
+    function listen(target, events, handler)
+    {
+      target = typeof target == 'string' ? document.getElementById(target) : target;
+
+      events.split(' ').forEach(function(e)
+      {
+        // discard empty "events"
+        if (!e) return;
+
+        target.addEventListener(e, handler, false);
+      });
+    }
+
+  </script>
+</html>

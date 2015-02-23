@@ -1,0 +1,31 @@
+sync event touchstart
+........... async event touchstart
+sync event touchend
+sync event mouseover
+sync event mousemove
+sync event mousedown
+sync event focus
+sync event focusin
+sync event DOMFocusIn
+sync event mouseup
+sync event click
+........... async event touchend
+........... async event mouseover
+........... async event mousemove
+........... async event mousedown
+........... async event focus
+........... async event focusin
+........... async event DOMFocusIn
+........... async event mouseup
+........... async event click
+
+// -- user touches outside of the element
+
+sync event mouseout
+sync event blur
+sync event focusout
+sync event DOMFocusOut
+........... async event mouseout
+........... async event blur
+........... async event focusout
+........... async event DOMFocusOut
