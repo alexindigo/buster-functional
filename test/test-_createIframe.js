@@ -20,7 +20,7 @@ buster.testCase('_createIframe',
   {
     var iframe, src = 'http://example.com';
 
-    global.document = {createElement: this.stub().returns({style: {}})};
+    global.document = {createElement: this.stub().returns({style: {}}), body: {appendChild: this.spy()}};
 
     iframe = this.testObject._createIframe(src);
 
@@ -29,5 +29,8 @@ buster.testCase('_createIframe',
     assert.equals(iframe.width, '100%');
     assert.equals(iframe.style.width, '100%');
     assert.equals(iframe.style.position, 'fixed');
+
+    // appends iframe to the document
+    assert.calledWith(global.document.body.appendChild, iframe);
   }
 });

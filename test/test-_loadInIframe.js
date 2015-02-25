@@ -23,20 +23,18 @@ buster.testCase('_loadInIframe',
       // prepare stubs
       this._stubs = {};
 
-      this._stubs.iwin     = {me: 'pretends to be window object within iframe'};
-      this._stubs.idoc     = {me: 'pretends to be document object within iframe'};
-      this._stubs.iframe   = {contentWindow: this._stubs.iwin, contentDocument: this._stubs.idoc};
+      this._stubs.$        = {me: 'pretends to be jQuery object within iframe'};
+      this._stubs.window   = {me: 'pretends to be window object within iframe'};
+      this._stubs.document = {me: 'pretends to be document object within iframe'};
+      this._stubs.iframe   = {contentWindow: this._stubs.window, contentDocument: this._stubs.document};
       this._stubs.callback = this.spy();
 
       // add jquery symbol
-      this._stubs.iwin.$ = {me: 'pretends to be jQuery object within iframe'};
+      this._stubs.window.$ = this._stubs.$;
 
       // stub methods called within _loadInIframe
       this.stub(this.testObject, '_createIframe').returns(this._stubs.iframe);
       this.spy(this.testObject, '_enhanceHandler');
-
-      // stub document object
-      global.document = {body: {appendChild: this.spy()}};
 
       // run test subject
       this.testObject._loadInIframe(common.iframeUriPath, this._stubs.callback);
@@ -44,16 +42,10 @@ buster.testCase('_loadInIframe',
 
     'Passes proper src to the _createIframe': function()
     {
+      // assigns iframe to the test object
+      assert.equals(this.testObject.iframe, this._stubs.iframe);
+
       assert.calledWith(this.testObject._createIframe, common.iframeUriPath);
-    },
-
-    'Appends iframe to the document': function()
-    {
-      // invoke load handler
-      this._stubs.iframe.onload();
-
-      // check appened element
-      assert.calledWith(global.document.body.appendChild, this._stubs.iframe);
     },
 
     'Tried _enhanceHandler with iframe window object': function()
@@ -61,29 +53,38 @@ buster.testCase('_loadInIframe',
       // invoke load handler
       this._stubs.iframe.onload();
 
-      assert.calledWith(this.testObject._enhanceHandler, this._stubs.iwin);
+      assert.calledWith(this.testObject._enhanceHandler, this._stubs.window);
     },
 
-    'Invokes provided callback with reference to iframe objects': function()
+    'Invokes provided callback and adds reference to iframe objects': function()
     {
+      refute.equals(this.testObject.window, this._stubs.window);
+      refute.equals(this.testObject.document, this._stubs.document);
+      refute.equals(this.testObject.$, this._stubs.$);
+
       // invoke load handler
       this._stubs.iframe.onload();
 
+      assert.equals(this.testObject.window, this._stubs.window);
+      assert.equals(this.testObject.document, this._stubs.document);
+      assert.equals(this.testObject.$, this._stubs.$);
+
       // got calback with created objects
-      assert.calledWith(this._stubs.callback, this._stubs.iframe, this._stubs.iwin.$, this._stubs.iwin, this._stubs.idoc);
+      assert.calledOnce(this._stubs.callback);
     },
 
     'Works in iframe.contentDocument-less environments': function()
     {
       // adjust environment to simulate
-      this._stubs.iframe.contentWindow.document = this._stubs.idoc;
+      this._stubs.iframe.contentWindow.document = this._stubs.document;
       delete this._stubs.iframe.contentDocument;
+
+      refute.equals(this.testObject.document, this._stubs.document);
 
       // invoke load handler
       this._stubs.iframe.onload();
 
-      // got calback with created objects
-      assert.calledWith(this._stubs.callback, this._stubs.iframe, this._stubs.iwin.$, this._stubs.iwin, this._stubs.idoc);
+      assert.equals(this.testObject.document, this._stubs.document);
     }
   }
 });

@@ -44,27 +44,6 @@ buster.testCase('load',
       // callback passed to the _loadInFrame
       assert.isFunction(this.testObject._loadInIframe.getCall(0).args[1]);
 
-    },
-
-    'Assigns iframe objects to the test context': function()
-    {
-      var iframe   = {me: Math.random()}
-        , $        = {me: Math.random()}
-        , window   = {me: Math.random()}
-        , document = {me: Math.random()}
-        ;
-
-      // prepare callback catcher
-      this.stub(this.testObject, '_delayedCallback');
-
-      // invoke passed callback
-      this.testObject._loadInIframe.getCall(0).args[1](iframe, $, window, document);
-
-      // check properties
-      assert.equals(this.testObject.iframe, iframe);
-      assert.equals(this.testObject.$, $);
-      assert.equals(this.testObject.window, window);
-      assert.equals(this.testObject.document, document);
     }
   }
 });
