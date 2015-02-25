@@ -85,6 +85,40 @@ buster.testCase('_loadInIframe',
       this._stubs.iframe.onload();
 
       assert.equals(this.testObject.document, this._stubs.document);
+    },
+
+    'Reuses already existing iframe': function()
+    {
+      // invoke load handler
+      this._stubs.iframe.onload();
+
+      // check for original values
+      assert.equals(this.testObject.window, this._stubs.window);
+      assert.equals(this.testObject.document, this._stubs.document);
+      assert.equals(this.testObject.$, this._stubs.$);
+
+      this._stubs.$        = {me: 'second time: pretends to be jQuery object within iframe'};
+      this._stubs.window   = {me: 'second time: pretends to be window object within iframe'};
+      this._stubs.document = {me: 'second time: pretends to be document object within iframe'};
+
+      this._stubs.iframe.contentWindow   = this._stubs.window;
+      this._stubs.iframe.contentDocument = this._stubs.document;
+      // update jquery symbol
+      this._stubs.window.$ = this._stubs.$;
+
+      // run test subject second time
+      this.testObject._loadInIframe(common.iframeUriPath, this._stubs.callback);
+
+      // shouldn't call _createIframe again
+      assert.calledOnce(this.testObject._createIframe);
+
+      // invoke load handler
+      this._stubs.iframe.onload();
+
+      // check for new values
+      assert.equals(this.testObject.window, this._stubs.window);
+      assert.equals(this.testObject.document, this._stubs.document);
+      assert.equals(this.testObject.$, this._stubs.$);
     }
   }
 });
