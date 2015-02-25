@@ -1,5 +1,7 @@
 // common helpers
-var mixin = require('../lib/functional_mixin');
+var buster = require('buster')
+  , mixin = require('../lib/functional_mixin')
+  ;
 
 var inlineValues =
 {
@@ -33,6 +35,16 @@ var common =
   // cookies
   cookieExpired: 'buster_contextPath=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT',
   cookieContextPath: 'buster_contextPath='+inlineValues.busterContextPath+';path=/',
+
+  // generic setup for all the tests
+  setUp: function()
+  {
+    // reset assertion counter
+    buster.referee.count = 0;
+
+    // init test object
+    common.createTestObject.call(this);
+  },
 
   createStubBuster: function()
   {

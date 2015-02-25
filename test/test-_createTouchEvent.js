@@ -7,7 +7,7 @@ var buster = require('buster')
 buster.testCase('_createTouchEvent',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'Creates touchstart event object': function()
   {

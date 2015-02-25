@@ -7,7 +7,7 @@ var buster = require('buster')
 buster.testCase('_createMouseEvent',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'Creates mousedown event object': function()
   {

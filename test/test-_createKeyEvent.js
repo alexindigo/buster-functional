@@ -7,7 +7,7 @@ var buster = require('buster')
 buster.testCase('_createKeyEvent',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'Creates keydown event object with lowercase letter': function()
   {

@@ -7,7 +7,7 @@ var buster = require('buster')
 buster.testCase('_createFocusOrBlurEvent',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'Returns focus event type while triggering focus method on the object': function()
   {

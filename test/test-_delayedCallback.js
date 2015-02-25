@@ -8,7 +8,7 @@ var buster = require('buster')
 buster.testCase('_delayedCallback',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'Not fails if no callback passed': function()
   {

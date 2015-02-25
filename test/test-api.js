@@ -8,7 +8,7 @@ var buster = require('buster')
 buster.testCase('Framework',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'All public methods return itself': function()
   {

@@ -7,7 +7,7 @@ var buster = require('buster')
 buster.testCase('_createEvent',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'Routes keydown event with provided extra': function()
   {

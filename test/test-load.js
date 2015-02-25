@@ -8,7 +8,7 @@ var buster = require('buster')
 buster.testCase('load',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   // clean up global mess
   tearDown: function()

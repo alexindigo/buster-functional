@@ -8,7 +8,7 @@ var buster = require('buster')
 buster.testCase('enhance',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'Stores provided handler within object': function()
   {

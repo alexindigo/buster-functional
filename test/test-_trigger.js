@@ -8,7 +8,7 @@ var buster = require('buster')
 buster.testCase('_trigger',
 {
   // create new test object for each test
-  setUp: common.createTestObject,
+  setUp: common.setUp,
 
   'Triggers provided event on the target': function()
   {
