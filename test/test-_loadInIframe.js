@@ -23,17 +23,20 @@ buster.testCase('_loadInIframe',
       // prepare stubs
       this._stubs = {};
 
-      this._stubs.$        = {me: 'pretends to be jQuery object within iframe'};
-      this._stubs.window   = {me: 'pretends to be window object within iframe'};
-      this._stubs.document = {me: 'pretends to be document object within iframe'};
-      this._stubs.iframe   = {contentWindow: this._stubs.window, contentDocument: this._stubs.document};
-      this._stubs.callback = this.spy();
+      this._stubs.$         = this.stub();
+      this._stubs.window    = {me: 'pretends to be window object within iframe'};
+      this._stubs.document  = {me: 'pretends to be document object within iframe'};
+      this._stubs.$document = {me: 'pretends to be jQuery document object within iframe'};
+      this._stubs.iframe    = {contentWindow: this._stubs.window, contentDocument: this._stubs.document};
+      this._stubs.callback  = this.spy();
 
       // add jquery symbol
       this._stubs.window.$ = this._stubs.$;
+      this._stubs.$.withArgs(this._stubs.document).returns(this._stubs.$document);
 
       // stub methods called within _loadInIframe
       this.stub(this.testObject, '_createIframe').returns(this._stubs.iframe);
+      this.stub(this.testObject, '_setEventRoot').returns();
       this.spy(this.testObject, '_enhanceHandler');
 
       // run test subject
@@ -52,6 +55,10 @@ buster.testCase('_loadInIframe',
     {
       // invoke load handler
       this._stubs.iframe.onload();
+
+      // sets event root as well
+      assert.calledWith(this._stubs.$, this._stubs.document);
+      assert.calledWith(this.testObject._setEventRoot, this._stubs.$document);
 
       assert.calledWith(this.testObject._enhanceHandler, this._stubs.window);
     },
@@ -97,7 +104,7 @@ buster.testCase('_loadInIframe',
       assert.equals(this.testObject.document, this._stubs.document);
       assert.equals(this.testObject.$, this._stubs.$);
 
-      this._stubs.$        = {me: 'second time: pretends to be jQuery object within iframe'};
+      this._stubs.$        = this.spy();
       this._stubs.window   = {me: 'second time: pretends to be window object within iframe'};
       this._stubs.document = {me: 'second time: pretends to be document object within iframe'};
 

@@ -455,7 +455,7 @@ function busterFunctionalMixin(testCase, options)
       this.document = this.iframe.contentDocument || this.iframe.contentWindow.document;
       this.$        = this.window.$;
 
-      this._setEventRoot(this.$(this.document));
+      this._setEventRoot($(this.document));
 
       // adjust window object with custom handler
       this._enhanceHandler.call(this, this.window);
