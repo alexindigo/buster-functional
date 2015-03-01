@@ -21,14 +21,17 @@ buster.testCase('_triggerEvents',
     this.stub(this.testObject, '_createEvent');
     this.testObject._createEvent.withArgs('touchstart').returns(touchstartEvent);
     this.testObject._createEvent.withArgs('touchend').returns(touchendEvent);
+    // pretend event is triggered
+    this.stub(this.testObject, '_trigger').returns(true);
 
     // invoke test subject
     this.testObject._triggerEvents(target, ['touchstart', 'touchend'], target, function()
     {
       // by now it should trigger boths events
-      assert.calledTwice(target.trigger);
-      assert.calledWith(target.trigger, touchstartEvent);
-      assert.calledWith(target.trigger, touchendEvent);
+      // runs with this.testObject context
+      assert.calledTwice(this._trigger);
+      assert.calledWith(this._trigger, target, touchstartEvent);
+      assert.calledWith(this._trigger, target, touchendEvent);
 
       // account for all the assertions
       assert.equals(buster.referee.count, 7);
@@ -56,28 +59,28 @@ buster.testCase('_triggerEvents',
     }.bind(this), this.testObject._interactionDelay);
   },
 
-  'Respects defaultPrevented flag': function(done)
+  'Respects stop propagation': function(done)
   {
-    var touchstartEvent = {me: 'touchstart event'}
-      , touchendEvent = {me: 'touchend event'}
+    var touchstartEvent = {me: 'touchstart event', type: 'touchstart'}
+      , touchendEvent = {me: 'touchend event', type: 'touchend'}
       , target = common.createTargetElement.call(this)
       ;
-
-    // set defaultPrevented to true on touchstartEvent
-    touchstartEvent.defaultPrevented = true;
 
     // stub _createEvent
     this.stub(this.testObject, '_createEvent');
     this.testObject._createEvent.withArgs('touchstart').returns(touchstartEvent);
     this.testObject._createEvent.withArgs('touchend').returns(touchendEvent);
+    // stop propagation after touchstart
+    this.stub(this.testObject, '_trigger').withArgs(target, touchstartEvent).returns(false);
 
     // invoke test subject
     this.testObject._triggerEvents(target, ['touchstart', 'touchend'], target, function()
     {
       // it should trigger only first event
-      assert.calledOnce(target.trigger);
-      assert.calledWith(target.trigger, touchstartEvent);
-      refute.calledWith(target.trigger, touchendEvent);
+      // runs with this.testObject context
+      assert.calledOnce(this._trigger);
+      assert.calledWith(this._trigger, target, touchstartEvent);
+      refute.calledWith(this._trigger, target, touchendEvent);
     });
 
     // first one invoke synchronously
@@ -103,105 +106,6 @@ buster.testCase('_triggerEvents',
       assert.equals(buster.referee.count, 7);
       // and done with the test
       done();
-    }.bind(this), this.testObject._interactionDelay);
-  },
-
-  'Respects isDefaultPrevented function': function(done)
-  {
-    var touchstartEvent = {me: 'touchstart event'}
-      , touchendEvent = {me: 'touchend event'}
-      , target = common.createTargetElement.call(this)
-      ;
-
-    // set isDefaultPrevented on touchstartEvent to return true
-    touchstartEvent.isDefaultPrevented = this.stub().returns(true);
-
-    // stub _createEvent
-    this.stub(this.testObject, '_createEvent');
-    this.testObject._createEvent.withArgs('touchstart').returns(touchstartEvent);
-    this.testObject._createEvent.withArgs('touchend').returns(touchendEvent);
-
-    // invoke test subject
-    this.testObject._triggerEvents(target, ['touchstart', 'touchend'], target, function()
-    {
-      // it should trigger only first event
-      assert.calledOnce(target.trigger);
-      assert.calledWith(target.trigger, touchstartEvent);
-      refute.calledWith(target.trigger, touchendEvent);
-    });
-
-    // first one invoke synchronously
-    assert.calledOnceWith(this.testObject._createEvent, 'touchstart', target);
-
-    // check there is no rush to go to the next event
-    // and it waits expected amout of time
-    setTimeout(function()
-    {
-      // still called only once
-      assert.calledOnce(this.testObject._createEvent);
-    }.bind(this), 0);
-
-    // wait required amount of time
-    setTimeout(function()
-    {
-      // still called only once
-      // and it's not 'touchend'
-      assert.calledOnce(this.testObject._createEvent);
-      refute.calledWith(this.testObject._createEvent, 'touchend');
-
-      // account for all the assertions
-      assert.equals(buster.referee.count, 7);
-      // and done with the test
-      done();
-    }.bind(this), this.testObject._interactionDelay);
-  },
-
-  'Continues flow when isDefaultPrevented exists but returns false': function(done)
-  {
-    var touchstartEvent = {me: 'touchstart event'}
-      , touchendEvent = {me: 'touchend event'}
-      , target = common.createTargetElement.call(this)
-      ;
-
-    // set isDefaultPrevented on touchstartEvent to return false
-    touchstartEvent.isDefaultPrevented = this.stub().returns(false);
-
-    // stub _createEvent
-    this.stub(this.testObject, '_createEvent');
-    this.testObject._createEvent.withArgs('touchstart').returns(touchstartEvent);
-    this.testObject._createEvent.withArgs('touchend').returns(touchendEvent);
-
-    // invoke test subject
-    this.testObject._triggerEvents(target, ['touchstart', 'touchend'], target, function()
-    {
-      // by now it should trigger boths events
-      assert.calledTwice(target.trigger);
-      assert.calledWith(target.trigger, touchstartEvent);
-      assert.calledWith(target.trigger, touchendEvent);
-
-      // account for all the assertions
-      assert.equals(buster.referee.count, 7);
-      // and done with the test
-      done();
-    });
-
-    // first one invoke synchronously
-    assert.calledOnceWith(this.testObject._createEvent, 'touchstart', target);
-
-    // check there is no rush to go to the next event
-    // and it waits expected amout of time
-    setTimeout(function()
-    {
-      // still called only once
-      assert.calledOnce(this.testObject._createEvent);
-    }.bind(this), 0);
-
-    // wait required amount of time
-    setTimeout(function()
-    {
-      // ok, now it should be called twice
-      assert.calledTwice(this.testObject._createEvent);
-      assert.calledWith(this.testObject._createEvent, 'touchend', target);
     }.bind(this), this.testObject._interactionDelay);
   },
 
@@ -222,16 +126,19 @@ buster.testCase('_triggerEvents',
     this.testObject._createEvent.withArgs('mousedown').returns(mousedownEvent);
     this.testObject._createEvent.withArgs('mouseup').returns(mouseupEvent);
     this.testObject._createEvent.withArgs('click').returns(clickEvent);
+    // pretend event is triggered
+    this.stub(this.testObject, '_trigger').returns(true);
 
     // invoke test subject
     this.testObject._triggerEvents(target, ['touchstart', ['touchend', 'mousedown', 'mouseup', 'click']], target, function()
     {
       // by now it should trigger boths events
-      assert.calledWith(target.trigger, touchstartEvent);
-      assert.calledWith(target.trigger, touchendEvent);
-      assert.calledWith(target.trigger, mousedownEvent);
-      assert.calledWith(target.trigger, mouseupEvent);
-      assert.calledWith(target.trigger, clickEvent);
+      // runs with this.testObject context
+      assert.calledWith(this._trigger, target, touchstartEvent);
+      assert.calledWith(this._trigger, target, touchendEvent);
+      assert.calledWith(this._trigger, target, mousedownEvent);
+      assert.calledWith(this._trigger, target, mouseupEvent);
+      assert.calledWith(this._trigger, target, clickEvent);
 
       // account for all the assertions
       assert.equals(buster.referee.count, 11);
@@ -276,15 +183,18 @@ buster.testCase('_triggerEvents',
     this.testObject._createEvent.withArgs('keydown').returns(keydownEvent);
     this.testObject._createEvent.withArgs('keypress').returns(keypressEvent);
     this.testObject._createEvent.withArgs('keyup').returns(keyupEvent);
+    // pretend event is triggered
+    this.stub(this.testObject, '_trigger').returns(true);
 
     // invoke test subject
     this.testObject._triggerEvents(target, [['keydown', 'keypress', changeValue], 'keyup'], char, function()
     {
       // by now it should trigger boths events
-      assert.calledThrice(target.trigger);
-      assert.calledWith(target.trigger, keydownEvent);
-      assert.calledWith(target.trigger, keypressEvent);
-      assert.calledWith(target.trigger, keyupEvent);
+      // runs with this.testObject context
+      assert.calledThrice(this._trigger);
+      assert.calledWith(this._trigger, target, keydownEvent);
+      assert.calledWith(this._trigger, target, keypressEvent);
+      assert.calledWith(this._trigger, target, keyupEvent);
 
       // account for all the assertions
       assert.equals(buster.referee.count, 12);
@@ -334,14 +244,17 @@ buster.testCase('_triggerEvents',
     this.stub(this.testObject, '_createEvent');
     this.testObject._createEvent.withArgs('focus').returns(focusEvent);
     this.testObject._createEvent.withArgs('blur').returns(blurEvent);
+    // pretend event is triggered
+    this.stub(this.testObject, '_trigger').returns(true);
 
     // invoke test subject
     this.testObject._triggerEvents(target, ['focus', updateField, 'blur'], function()
     {
       // by now it should trigger boths events
-      assert.calledTwice(target.trigger);
-      assert.calledWith(target.trigger, focusEvent);
-      assert.calledWith(target.trigger, blurEvent);
+      // runs with this.testObject context
+      assert.calledTwice(this._trigger);
+      assert.calledWith(this._trigger, target, focusEvent);
+      assert.calledWith(this._trigger, target, blurEvent);
 
       // account for all the assertions
       assert.equals(buster.referee.count, 16);

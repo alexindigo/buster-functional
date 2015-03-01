@@ -25,6 +25,8 @@ sync event DOMActivate
 ........... async event click
 ........... async event DOMActivate
 
+
+
 // -- user moves pointer outside of the element
 
 sync event mousemove

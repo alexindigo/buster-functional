@@ -7,9 +7,8 @@
 
    <p>Link: <a id="the_link" href="./">[ link ]</a></p>
 
-   <p>Button: <button id="the_button">[ button ]</button>
+   <p>Button: <button id="the_button">[ button ]</button></p>
 
-  </body>
   <script>
 
     // UI Events
@@ -78,8 +77,27 @@
         if (!e) return;
 
         target.addEventListener(e, handler, false);
+        // add old school event handler
+        target['on' + e] = function()
+        {
+          console.log('-- old school sync event', e);
+          setTimeout(function()
+          {
+            console.log('........... -- old school async event', e);
+          }, 0);
+        };
+
+        if (typeof target['on' + e] != 'undefined')
+        {
+          console.log('++ ', 'on'+e+':', typeof target['on' + e]);
+        }
+        if (typeof target[e] != 'undefined')
+        {
+          console.log('\n\n++ ', e+':', typeof target[e], '\n\n');
+        }
       });
     }
 
   </script>
+  </body>
 </html>

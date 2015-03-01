@@ -81,6 +81,8 @@ var common =
     target.blur  = this.stub();
     target.focus = this.stub();
 
+    target.first = this.stub().returns(target);
+
     return target;
   },
 

@@ -77,7 +77,7 @@ buster.testCase('_createEvent',
     assert.calledWith(this.testObject._createMouseEvent, type, target);
   },
 
-  'Routes focus event with provided extra': function()
+  'Routes focus event': function()
   {
     var event
       , type = 'focus'
@@ -85,30 +85,30 @@ buster.testCase('_createEvent',
       ;
 
     // route click to the mouse event handler
-    this.stub(this.testObject, '_createFocusOrBlurEvent');
+    this.stub(this.testObject, '_createGenericEvent');
 
     // invoke test subject
     this.testObject._createEvent(type, target);
 
     // since no extend function is present check it's arguments
-    assert.calledWith(this.testObject._createFocusOrBlurEvent, type, target);
+    assert.calledWith(this.testObject._createGenericEvent, type);
   },
 
-  'Routes blur event with provided extra': function()
+  'Routes DOMFocusOut event': function()
   {
     var event
-      , type = 'blur'
+      , type = 'DOMFocusOut'
       , target = common.createTargetElement.call(this)
       ;
 
     // route click to the mouse event handler
-    this.stub(this.testObject, '_createFocusOrBlurEvent');
+    this.stub(this.testObject, '_createGenericEvent');
 
     // invoke test subject
     this.testObject._createEvent(type, target);
 
     // since no extend function is present check it's arguments
-    assert.calledWith(this.testObject._createFocusOrBlurEvent, type, target);
+    assert.calledWith(this.testObject._createGenericEvent, type);
   },
 
   'Throws on unrecognized event type': function()

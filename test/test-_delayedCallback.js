@@ -56,7 +56,7 @@ buster.testCase('_delayedCallback',
     {
       isPreCheckCalled = true;
       refute.called(callback);
-    }, this.testObject.delay-1);
+    }, this.testObject.delay-10);
 
     setTimeout(function()
     {
@@ -65,6 +65,6 @@ buster.testCase('_delayedCallback',
       assert.called(callback);
       // and be done
       done();
-    }, this.testObject.delay);
+    }, this.testObject._delay);
   }
 });
