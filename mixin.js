@@ -98,28 +98,6 @@
         return this;
       };
 
-      // Triggers select option element
-      test.testCase.select = function function_mixin_select(target, optionValue, callback) {
-
-        // get the first element of the selection
-        target = (typeof target == 'string' ? this.$(target) : target).first();
-
-        // sync all event handlers
-        setTimeout(function() {
-
-          this._triggerEvents(target, ['focus', 'touchstart', 'touchend', ['mousedown', 'mouseup', 'mouseclick', 'click']], target, function() {
-            target.find('option[value=' + optionValue + ']').attr('selected', true).trigger('change');
-            this._triggerEvents(target, ['blur'], target, callback);
-          });
-
-        }.bind(this), this.delay);
-
-        return this;
-      };
-
-
-
-
     });
   });
 })(buster);

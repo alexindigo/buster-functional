@@ -1,0 +1,29 @@
+sync event focus b 1 b
+sync event focusin b 1 b
+sync event DOMFocusIn b 1 b
+........... async event focus b 1 b
+........... async event focusin b 1 b
+........... async event DOMFocusIn b 1 b
+
+sync event keyup b 1 b
+........... async event keyup b 1 b
+sync event keyup b 1 b
+........... async event keyup b 1 b
+sync event keydown b 1 b
+........... async event keydown b 1 b
+
+sync event input c 2 c
+sync event change c 2 c
+sync event keyup c 2 c
+........... async event input c 2 c
+........... async event change c 2 c
+........... async event keyup c 2 c
+
+sync event keydown c 2 c
+sync event blur c 2 c
+sync event focusout c 2 c
+sync event DOMFocusOut c 2 c
+........... async event keydown c 2 c
+........... async event blur c 2 c
+........... async event focusout c 2 c
+........... async event DOMFocusOut c 2

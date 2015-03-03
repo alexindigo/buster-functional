@@ -69,7 +69,7 @@ var common =
   // expected to called within test context
   createTargetElement: function()
   {
-    var target = [{value: ''}];
+    var target = [{value: '', selectedIndex: 0, options: [{value: 'a', text: 'A'}, {value: 'b', text: 'B'}, {value: 'c', text: 'C'}]}];
 
     target.offset = this.stub().returns(common._returns_offset);
     target.width  = this.stub().returns(common._returns_width);

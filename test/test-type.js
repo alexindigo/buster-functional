@@ -19,7 +19,7 @@ buster.testCase('type',
       ;
 
     // it takes longer than default timeout
-    this.timeout = this.testObject._delay*3;
+    this.timeout = Math.max(this.timeout, this.testObject._delay*3);
 
     // just check if _triggerEvents being called
     this.stub(this.testObject, '_triggerEvents');

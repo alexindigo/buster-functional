@@ -1,0 +1,43 @@
+*** focus
+
+sync event touchstart a 0 a
+........... async event touchstart a 0 a
+
+sync event touchend a 0 a
+sync event mouseover a 0 a
+sync event mousemove a 0 a
+sync event mousedown a 0 a
+sync event focus a 0 a
+sync event focusin a 0 a
+sync event DOMFocusIn a 0 a
+sync event mouseup a 0 a
+sync event click a 0 a
+sync event DOMActivate a 0 a
+........... async event touchend a 0 a
+........... async event mouseover a 0 a
+........... async event mousemove a 0 a
+........... async event mousedown a 0 a
+........... async event focus a 0 a
+........... async event focusin a 0 a
+........... async event DOMFocusIn a 0 a
+........... async event mouseup a 0 a
+........... async event click a 0 a
+........... async event DOMActivate a 0 a
+
+*** change
+
+sync event input b 1 b
+sync event change b 1 b
+........... async event input b 1 b
+........... async event change b 1 b
+
+*** blur
+
+sync event mouseout b 1 b
+sync event blur b 1 b
+sync event focusout b 1 b
+sync event DOMFocusOut b 1 b
+........... async event mouseout b 1 b
+........... async event blur b 1 b
+........... async event focusout b 1 b
+........... async event DOMFocusOut b 1

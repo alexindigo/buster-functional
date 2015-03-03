@@ -11,6 +11,8 @@
 
    <p>Input: <input type="text" id="the_input" name="the_input" value=""></p>
 
+   <p>Select: <select id="the_select"><option value="a">A</option><option value="b">B</option><option value="c">C</option></select></p>
+
   <script>
 
     // UI Events
@@ -79,6 +81,15 @@
       setTimeout(function()
       {
         console.log('........... async event', event.type, this.value);
+      }.bind(this), 0);
+    });
+
+    listen('the_select', allEvents, function(event)
+    {
+      console.log('sync event', event.type, this.value, this.selectedIndex, this.options[this.selectedIndex].value);
+      setTimeout(function()
+      {
+        console.log('........... async event', event.type, this.value, this.selectedIndex, this.options[this.selectedIndex].value);
       }.bind(this), 0);
     });
 

@@ -1,0 +1,76 @@
+*** focus (with touch)
+
+sync event touchstart
+........... async event touchstart
+
+sync event touchend
+sync event mouseover
+sync event mousemove
+sync event mousedown
+sync event focus
+sync event focusin
+sync event DOMFocusIn
+sync event mouseup
+sync event click
+sync event DOMActivate
+sync event DOMActivate
+........... async event touchend
+........... async event mouseover
+........... async event mousemove
+........... async event mousedown
+........... async event focus
+........... async event focusin
+........... async event DOMFocusIn
+........... async event mouseup
+........... async event click
+........... async event DOMActivate
+........... async event DOMActivate
+
+*** key (a)
+
+sync event keydown
+sync event keypress
+sync event input a
+........... async event keydown a
+........... async event keypress a
+........... async event input a
+
+sync event keyup a
+........... async event keyup a
+
+*** key (b)
+
+sync event keydown a
+sync event keypress a
+sync event input ab
+........... async event keydown ab
+........... async event keypress ab
+........... async event input ab
+
+sync event keyup ab
+........... async event keyup ab
+
+*** key (c)
+
+sync event keydown ab
+sync event keypress ab
+sync event input abc
+........... async event keydown abc
+........... async event keypress abc
+........... async event input abc
+
+sync event keyup abc
+........... async event keyup abc
+
+*** 1/2 change (with blur)
+
+sync event mouseout abc
+sync event change abc
+sync event blur abc
+sync event focusout abc
+sync event DOMFocusOut abc
+........... async event mouseout abc
+........... async event change abc
+........... async event blur abc
+........... async event focusout abc
+........... async event DOMFocusOut ab
