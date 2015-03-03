@@ -197,7 +197,7 @@ buster.testCase('_triggerEvents',
       assert.calledWith(this._trigger, target, keyupEvent);
 
       // account for all the assertions
-      assert.equals(buster.referee.count, 12);
+      assert.equals(buster.referee.count, 13);
       // and done with the test
       done();
     });
@@ -211,6 +211,8 @@ buster.testCase('_triggerEvents',
     assert.calledOnce(changeValue);
     // and called with test context
     assert.calledOn(changeValue, this.testObject);
+    // and with target and extra arguments
+    assert.calledWith(changeValue, target, char);
 
     // check there is no rush to go to the next event
     // and it waits expected amout of time

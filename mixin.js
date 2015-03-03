@@ -83,27 +83,6 @@
     runner.on('test:setUp', function(test)
     {
 
-      // Triggers touch on the element
-      test.testCase.touch = function functional_mixin_touch(target, callback)
-      {
-        // get first element of the selection
-        target = (typeof target == 'string' ? this.$(target) : target).first();
-
-        // make it all async, to allow some time for event handlers to hook in
-        // and keep them in more reabable flow in the test
-        setTimeout(function()
-        {
-          // list events to trigger asynchronously
-          // and group events needed to be triggered synchronously
-          // as second dimension array
-          // and pass extra arguments for createEvent function
-          this._triggerEvents(target, ['touchstart', 'touchend', ['mousedown', 'mouseup', 'mouseclick']], target, callback);
-
-        }.bind(this), this.delay);
-
-        return this;
-      };
-
       // Scrolls page to the top by half of the height of the target element
       test.testCase.scroll = function functional_mixin_scroll(target, callback)
       {
@@ -138,46 +117,7 @@
         return this;
       };
 
-      // Types into input field
-      test.testCase.type = function functional_mixin_type(target, text, callback)
-      {
-        var chars  = (text || '').split('');
 
-        // get first element of the selection
-        target = (typeof target == 'string' ? this.$(target) : target).first();
-
-        // enters chars one by one
-        function enterChar()
-        {
-          var char = chars.shift();
-
-          // still have something to type
-          if (char)
-          {
-            // list events to trigger asynchronously
-            // and group events needed to be triggered synchronously
-            // as second dimension array
-            this._triggerEvents(target, [['keydown', 'keypress'], 'keyup'], char, enterChar.bind(this));
-          }
-          else
-          {
-            // be done after that
-            setTimeout(this._delayedCallback.bind(this, callback), this._interactionDelay);
-          }
-        };
-
-        // make it all async, to allow some time for event handlers to hook in
-        // and keep them in more reabable flow in the test
-        setTimeout(function()
-        {
-          // start with focus event
-          this.focus(target);
-
-          setTimeout(enterChar.bind(this), this._interactionDelay);
-        }.bind(this), this.delay);
-
-        return this;
-      }
 
 
     });

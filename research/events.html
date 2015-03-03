@@ -9,6 +9,8 @@
 
    <p>Button: <button id="the_button">[ button ]</button></p>
 
+   <p>Input: <input type="text" id="the_input" name="the_input" value=""></p>
+
   <script>
 
     // UI Events
@@ -45,8 +47,12 @@
     // from: http://www.w3.org/TR/touch-events/#list-of-touchevent-types
     var touchEvents = 'touchstart touchend touchmove touchcancel';
 
+    // Form Events
+    // from:
+    var formEvents = 'change';
+
     // Put them all together
-    var allEvents = [uiEvents, focusEvents, mouseEvents, wheelEvents, inputEvents, keyboardEvents, touchEvents].join(' ');
+    var allEvents = [uiEvents, focusEvents, mouseEvents, wheelEvents, inputEvents, keyboardEvents, touchEvents, formEvents].join(' ');
 
     // listen on objects
     listen('the_link', allEvents, function(event)
@@ -67,6 +73,15 @@
       }, 0);
     });
 
+    listen('the_input', allEvents, function(event)
+    {
+      console.log('sync event', event.type, this.value);
+      setTimeout(function()
+      {
+        console.log('........... async event', event.type, this.value);
+      }.bind(this), 0);
+    });
+
     function listen(target, events, handler)
     {
       target = typeof target == 'string' ? document.getElementById(target) : target;
@@ -78,19 +93,19 @@
 
         target.addEventListener(e, handler, false);
         // add old school event handler
-        target['on' + e] = function()
-        {
-          console.log('-- old school sync event', e);
-          setTimeout(function()
-          {
-            console.log('........... -- old school async event', e);
-          }, 0);
-        };
+        // target['on' + e] = function()
+        // {
+        //   console.log('-- old school sync event', e);
+        //   setTimeout(function()
+        //   {
+        //     console.log('........... -- old school async event', e);
+        //   }, 0);
+        // };
 
-        if (typeof target['on' + e] != 'undefined')
-        {
-          console.log('++ ', 'on'+e+':', typeof target['on' + e]);
-        }
+        // if (typeof target['on' + e] != 'undefined')
+        // {
+        //   console.log('++ ', 'on'+e+':', typeof target['on' + e]);
+        // }
         if (typeof target[e] != 'undefined')
         {
           console.log('\n\n++ ', e+':', typeof target[e], '\n\n');

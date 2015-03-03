@@ -64,7 +64,7 @@ buster.testCase('Loader',
       global.busterFunctionalMixin = {me: Math.random()};
 
       // provide runner object to the onCreate callback
-      this.stubBuster.testRunner.onCreate.getCall(0).args[0](this.runner);
+      this.stubBuster.testRunner.onCreate.getCall(0).callArgWith(0, this.runner);
     },
 
     'Attaches test runner event listners': function()
@@ -80,7 +80,7 @@ buster.testCase('Loader',
     'Resizes frames on suite:start': function()
     {
       // first one is 'suite:start'
-      this.runner.on.getCall(0).args[1]();
+      this.runner.on.getCall(0).callArg(1);
 
       // check frameset selection
       assert.calledWith(this.stubGetElementsByTagName, 'frameset');
@@ -91,7 +91,7 @@ buster.testCase('Loader',
     'Resizes frames on suite:end': function()
     {
       // second one is 'suite:end'
-      this.runner.on.getCall(1).args[1]();
+      this.runner.on.getCall(1).callArg(1);
 
       // check frameset selection
       assert.calledWith(this.stubGetElementsByTagName, 'frameset');
@@ -102,7 +102,7 @@ buster.testCase('Loader',
     'Cleans up buster_contextPath cookie on suite:end': function()
     {
       // second one is 'suite:end'
-      this.runner.on.getCall(1).args[1]();
+      this.runner.on.getCall(1).callArg(1);
 
       // top iframe set to 80px
       assert.equals(this.document.cookie, common.cookieExpired);
@@ -111,7 +111,7 @@ buster.testCase('Loader',
     'Cleans up buster_contextPath cookie on context:end': function()
     {
       // third one is 'context:end'
-      this.runner.on.getCall(2).args[1]();
+      this.runner.on.getCall(2).callArg(1);
 
       // top iframe set to 80px
       assert.equals(this.document.cookie, common.cookieExpired);

@@ -69,7 +69,7 @@ var common =
   // expected to called within test context
   createTargetElement: function()
   {
-    var target = {};
+    var target = [{value: ''}];
 
     target.offset = this.stub().returns(common._returns_offset);
     target.width  = this.stub().returns(common._returns_width);
@@ -84,6 +84,42 @@ var common =
     target.first = this.stub().returns(target);
 
     return target;
+  },
+
+  // --- custom (sinon) matchers
+
+  // compares passed events list with expected set
+  // uses '[Function: functionName]' to indicate custom event function
+  matchEventsList: function(expected, value)
+  {
+    var i;
+
+    for (i=0; i<expected.length; i++)
+    {
+      // string (including magic string)
+      if (typeof expected[i] == 'string')
+      {
+        if (expected[i].match(/^\[Function\: /))
+        {
+          // unsuccessfully expected function
+          if (typeof value[i] != 'function' || expected[i] != '[Function: '+value[i].name+']') return false;
+        }
+        else
+        {
+          // expected event name doesn't match
+          if (expected[i] !== value[i]) return false;
+        }
+      }
+      // or object (sub array)
+      else
+      {
+        // same but sub array
+        if (!common.matchEventsList(expected[i], value[i])) return false;
+      }
+    }
+
+    // everything is fine
+    return true;
   },
 
   // --- common pieces of the event object composition
