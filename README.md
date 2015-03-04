@@ -1,4 +1,4 @@
-# buster-functional-tests [![Build Status](https://img.shields.io/travis/alexindigo/buster-rendr-functional-tests/v1.0.svg?style=flat-square)](https://travis-ci.org/alexindigo/buster-rendr-functional-tests) [![Coverage Status](https://img.shields.io/coveralls/alexindigo/buster-rendr-functional-tests/v1.0.svg?style=flat-square)](https://coveralls.io/r/alexindigo/buster-rendr-functional-tests?branch=v1.0)
+# buster-functional [![Build Status](https://img.shields.io/travis/alexindigo/buster-functional/master.svg?style=flat-square)](https://travis-ci.org/alexindigo/buster-functional) [![Coverage Status](https://img.shields.io/coveralls/alexindigo/buster-functional/master.svg?style=flat-square)](https://coveralls.io/r/alexindigo/buster-functional?branch=master)
 
 Functional tests helper for BusterJS. Adds helper functions to simulate basic user interactions.
 
@@ -9,7 +9,7 @@ Functional tests helper for BusterJS. Adds helper functions to simulate basic us
 ## Install
 
 ```
-npm install buster-rendr-functional-tests --save-dev
+npm install buster-functional --save-dev
 ```
 
 Add following snippet to your project's `package.json` to allow `buster-server` support
@@ -18,7 +18,7 @@ proxying without session prefixes.
 ```
 "scripts":
 {
-  "postinstall": "test ! -d ./node_modules/buster-rendr-functional-tests || ./node_modules/buster-rendr-functional-tests/bin/install_wrapper"
+  "postinstall": "test ! -d ./node_modules/buster-functional || ./node_modules/buster-functional/bin/install_wrapper"
 },
 ```
 
@@ -28,7 +28,7 @@ proxying without session prefixes.
 
 ### Config
 
-Just include `buster-rendr-functional-tests` as extension,
+Just include `buster-functional` as extension,
 list proxied paths as resources, see [Proxy resources](http://docs.busterjs.org/en/latest/modules/buster-configuration/#proxy-resources).
 
 ```javascript
@@ -50,9 +50,9 @@ list proxied paths as resources, see [Proxy resources](http://docs.busterjs.org/
   ],
   extensions:
   [
-    require('buster-rendr-functional-tests')
+    require('buster-functional')
   ],
-  'buster-rendr-functional-tests':
+  'buster-functional':
   {
     timeout: 120 // seconds
   }
@@ -322,7 +322,7 @@ setUp: function(done)
 
 ## Real Life Example
 
-[Functional testing of Trulia Mobile website](https://vimeo.com/118677083) using `Buster.JS` with `buster-rendr-functional-tests` module in real browsers on mobile devices, including iPhones 6+ and 5S with iOS8/Safari, Androids 4.4 with Stock and Chrome browsers.
+[Functional testing of Trulia Mobile website](https://vimeo.com/118677083) using `Buster.JS` with `buster-functional` module in real browsers on mobile devices, including iPhones 6+ and 5S with iOS8/Safari, Androids 4.4 with Stock and Chrome browsers.
 
 ## TODO
 
