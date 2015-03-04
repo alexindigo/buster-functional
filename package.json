@@ -1,6 +1,6 @@
 {
   "name": "buster-functional",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Functional tests helper for BusterJS",
   "main": "index.js",
   "scripts": {
@@ -9,9 +9,6 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/alexindigo/buster-functional.git"
-  },
-  "peerDependencies": {
-    "buster": "~0.7.18"
   },
   "devDependencies": {
     "buster": "~0.7.18",

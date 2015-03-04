@@ -1,8 +1,6 @@
 # buster-functional [![Build Status](https://img.shields.io/travis/alexindigo/buster-functional/master.svg?style=flat-square)](https://travis-ci.org/alexindigo/buster-functional) [![Coverage Status](https://img.shields.io/coveralls/alexindigo/buster-functional/master.svg?style=flat-square)](https://coveralls.io/r/alexindigo/buster-functional?branch=master)
 
-Functional tests helper for BusterJS. Adds helper functions to simulate basic user interactions.
-
-*Requires: [BusterJS](http://busterjs.org/) as peer dependency.*
+Functional tests extension for BusterJS. Adds helper functions to simulate basic user interactions.
 
 *Expects: [jQuery](http://jquery.com) to be present on the test target page.*
 
@@ -61,16 +59,15 @@ list proxied paths as resources, see [Proxy resources](http://docs.busterjs.org/
 
 ### .load(uri, [callback])
 
-Loads requested page into iframe and waits for the `App` object to be resolved.
+Loads requested page into iframe.
 
-*Note: When page is loaded, references to it's `window`, `document`, `$` and `App`
-are attached to the test's context.*
+*Note: When page is loaded, references to it's `window`, `document` and `$` are attached to the test's context.*
 
 ```javascript
 setUp: function(done)
 {
   // load new app's homepage for each test
-  this.load('/index').wait('postPageRender', done);
+  this.load('/index').waitForVar('$', done);
 }
 ```
 
@@ -108,6 +105,29 @@ Simulates browser events related to touch, in the right order and with proper pa
 }
 ```
 
+### .click(selector|element, [callback])
+
+Simulates browser events related to click, in the right order and with proper pauses.
+
+```javascript
+'Change search type to for-sale': function(done)
+{
+  // initially loads as For Rent search type
+  assert.className(this.$('#searchTypeTabs>[data-tab=for_rent]')[0], 'backgroundLowlight');
+
+  // change tab
+  this.click('#searchTypeTabs>[data-tab=for_sale]', function()
+  {
+    // for rent tab should be highlighted
+    assert.className(this.$('#searchTypeTabs>[data-tab=for_sale]')[0], 'backgroundLowlight');
+    // and for sale tab should not
+    refute.className(this.$('#searchTypeTabs>[data-tab=for_rent]')[0], 'backgroundLowlight');
+
+    done();
+  });
+}
+```
+
 ### .type(selector|target, text, [callback])
 
 Simulates user's typing, with all related events and proper timing.
@@ -126,68 +146,27 @@ Simulates user's typing, with all related events and proper timing.
 }
 ```
 
-### .select(selector|target, optionValue, [callback])
+### .select(selector|target, option, [callback])
 
-Simulates user's select drop-down action, with all related events and proper timing.
+Simulates selecting option within dropdown, with all related events and proper timing.
 
 ```javascript
 'Set value for select drop-down': function(done)
 {
-  this.select('[data-role=selectTag]', '1000', function()
+  var minPrice = this.$('[data-role=selectTag]');
+
+  this.select(minPrice, '1,000', function()
   {
     // Check correct drop-down value is selected
-    // should have selected "1000"
-    assert.isTrue(this.$('[data-role=selectTag] > option[value=1000]').is(':selected'));
+    assert.equals(minPrice[0].options[minPrice[0].selectedIndex].text, '1,000');
     done();
   });
 }
 ```
 
-### .scroll(selector|target, callback)
+### .wait([event], callback)
 
-Scrolls the window to the middle of the provided element.
-
-```javascript
-'Header should be hidden when user scrolls past the first item': function(done) {
-  var $header = this.$('[data-role=header]');
-  var $item = this.$('[data-itemindex=2]')
-  this.scroll(item, function() {
-    assert.isFalse($header.is(':visible'));
-  });
-}
-```
-
-### .focus(selector|target)
-
-Makes sure focus event is triggered on the provided element.
-
-*Note: `.type` uses it internally. It's a synchronous function.*
-
-```javascript
-'Test': function(done)
-{
-  this.focus('[data-action=searchForm]');
-}
-```
-
-### .blur(selector|target)
-
-Makes sure blur event is triggered on the provided element.
-
-*Note: It's a synchronous function.*
-
-```javascript
-'Test': function(done)
-{
-  this.blur('[data-action=searchForm]');
-}
-```
-
-### .wait([event], callback, [delay])
-
-Waits for the App level events, if no `window.App` is available,
-puts callbacks into queue and continues to check for the `App` object
-every once in a while.
+Waits for the application level events (`$(document)` by default), if no `window.$` is available, waits until it's resolved (via `this._eventRoot`).
 
 ```javascript
 'Go to the property page': function(done)
@@ -209,7 +188,7 @@ every once in a while.
 }
 ```
 
-### .waitForCss(selector|element, [callback])
+### .waitForTransition(selector|element, [callback])
 
 Waits for CSS Transition to finish, triggers provided callback after that.
 
@@ -226,7 +205,7 @@ Waits for CSS Transition to finish, triggers provided callback after that.
   this.touch('#navToggle');
 
   // there is animation delay for sliding in, wait till animation is done
-  this.waitForCss(target, function()
+  this.waitForTransition(target, function()
   {
     // when open, side menu has position fixed
     assert.equals(target.css('position'), 'fixed');
@@ -326,7 +305,6 @@ setUp: function(done)
 
 ## TODO
 
-- Add support for desktop events.
 - Integrate resource proxy changes into `buster-server`.
 - Improve documentation.
 
