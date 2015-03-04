@@ -44,7 +44,7 @@ buster.testCase('select',
       this.testObject._triggerEvents.getCall(0).args[1][1][0](target);
 
       // trigger callback
-      this.testObject._triggerEvents.getCall(0).callArg(2);
+      this.testObject._triggerEvents.getCall(0).callArgOn(2, this.testObject);
 
       // and wait for final callback
       setTimeout(function()
@@ -93,5 +93,38 @@ buster.testCase('select',
 
       done();
     }.bind(this), this.testObject._delay);
+  },
+
+  'Supports all the event types': function(done)
+  {
+    var eventsList  = [['focus', 'focusin', 'DOMFocusIn'], ['[Function: selectOption]', 'input', 'change'], ['blur', 'focusout', 'DOMFocusOut']]
+      , target      = common.createTargetElement.call(this)
+      , option      = 'B'
+      ;
+
+    // increase timeout to accomodate async triggering
+    this.timeout = Math.max(250, this.testObject._interactionDelay * (eventsList.length+1));
+
+    // Don't go too deep
+    this.stub(this.testObject, '_trigger');
+    // return event type instead of full object
+    this.stub(this.testObject, '_createEvent').returnsArg(0);
+
+    // invoke test subject
+    this.testObject.select(target, option, function()
+    {
+      // each event type triggered
+      // callback ran within testObject context
+      assert.calledWith(this._trigger, target, 'focus');
+      assert.calledWith(this._trigger, target, 'focusin');
+      assert.calledWith(this._trigger, target, 'DOMFocusIn');
+      assert.calledWith(this._trigger, target, 'input');
+      assert.calledWith(this._trigger, target, 'change');
+      assert.calledWith(this._trigger, target, 'blur');
+      assert.calledWith(this._trigger, target, 'focusout');
+      assert.calledWith(this._trigger, target, 'DOMFocusOut');
+
+      done();
+    });
   }
 });

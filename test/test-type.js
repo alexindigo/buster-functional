@@ -19,7 +19,7 @@ buster.testCase('type',
       ;
 
     // it takes longer than default timeout
-    this.timeout = Math.max(this.timeout, this.testObject._delay*3);
+    this.timeout = Math.max(250, this.testObject._delay*3);
 
     // just check if _triggerEvents being called
     this.stub(this.testObject, '_triggerEvents');
@@ -44,7 +44,7 @@ buster.testCase('type',
 
       // --- events for the first letter
       // trigger callback after focus
-      this.testObject._triggerEvents.getCall(0).callArg(2);
+      this.testObject._triggerEvents.getCall(0).callArgOn(2, this.testObject);
 
       // triggers first char of the string
       assert.calledWithMatch(this.testObject._triggerEvents, target, common.matchEventsList.bind(this, eventsList), text[0]);
@@ -53,7 +53,7 @@ buster.testCase('type',
       this.testObject._triggerEvents.getCall(1).args[1][0][2](target, text[0]);
 
       // trigger callback after first char
-      this.testObject._triggerEvents.getCall(1).callArg(3);
+      this.testObject._triggerEvents.getCall(1).callArgOn(3, this.testObject);
 
       // triggers second char of the string
       assert.calledWithMatch(this.testObject._triggerEvents, target, common.matchEventsList.bind(this, eventsList), text[1]);
@@ -62,7 +62,7 @@ buster.testCase('type',
       this.testObject._triggerEvents.getCall(2).args[1][0][2](target, text[1]);
 
       // trigger callback after second char
-      this.testObject._triggerEvents.getCall(2).callArg(3);
+      this.testObject._triggerEvents.getCall(2).callArgOn(3, this.testObject);
 
       // triggers third char of the string
       assert.calledWithMatch(this.testObject._triggerEvents, target, common.matchEventsList.bind(this, eventsList), text[2]);
@@ -71,7 +71,7 @@ buster.testCase('type',
       this.testObject._triggerEvents.getCall(3).args[1][0][2](target, text[2]);
 
       // trigger callback after third char
-      this.testObject._triggerEvents.getCall(3).callArg(3);
+      this.testObject._triggerEvents.getCall(3).callArgOn(3, this.testObject);
 
       // still called only four times
       assert.equals(this.testObject._triggerEvents.callCount, 4);
@@ -122,5 +122,34 @@ buster.testCase('type',
 
       done();
     }.bind(this), this.testObject._delay);
+  },
+
+  'Supports all the event types': function(done)
+  {
+    var eventsList = [['keydown', 'keypress', '[Function: addChar]', 'input'], 'keyup']
+      , target     = common.createTargetElement.call(this)
+      , text       = 'abc'
+      ;
+
+    // increase timeout to accomodate async triggering
+    this.timeout = Math.max(250, this.testObject._interactionDelay * text.length * (eventsList.length+1));
+
+    // Don't go too deep
+    this.stub(this.testObject, '_trigger');
+    // return event type instead of full object
+    this.stub(this.testObject, '_createEvent').returnsArg(0);
+
+    // invoke test subject
+    this.testObject.type(target, text, function()
+    {
+      // each event type triggered
+      // callback ran within testObject context
+      assert.calledWith(this._trigger, target, 'keydown');
+      assert.calledWith(this._trigger, target, 'keypress');
+      assert.calledWith(this._trigger, target, 'input');
+      assert.calledWith(this._trigger, target, 'keyup');
+
+      done();
+    });
   }
 });
