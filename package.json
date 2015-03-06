@@ -1,7 +1,7 @@
 {
   "name": "buster-functional",
-  "version": "1.0.1",
-  "description": "Functional tests helper for BusterJS",
+  "version": "1.0.2",
+  "description": "Functional tests extension for BusterJS. Adds helper functions to simulate basic user interactions",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/buster-test --fail-on-focus --reporter specification"

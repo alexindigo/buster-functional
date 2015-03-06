@@ -1,12 +1,12 @@
 var fs = require('fs')
   , path = require('path')
-  , mixin = fs.readFileSync(path.join(__dirname, 'lib/test_case_mixin.js'))
+  , mixin = fs.readFileSync(path.join(__dirname, 'lib/functional_mixin.js'))
   , mixinLoader = fs.readFileSync(path.join(__dirname, 'lib/mixin_loader.js'))
   ;
 
 module.exports =
 {
-  name: 'buster-rendr-functional-tests',
+  name: 'buster-functional',
 
   create: function (options)
   {

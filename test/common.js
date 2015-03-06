@@ -56,10 +56,13 @@ var common =
   // expected to called within test context
   createTestObject: function()
   {
-    this.testObject = {};
+    this.testObject = {testCase: {}};
 
     // apply mixin
     mixin(this.testObject);
+
+    // get reference to the testCase
+    this.testObject = this.testObject.testCase;
 
     this.testObject.$ = this.stub().returns(common._jQuery);
     this.testObject.$.Event = this.stub().returns(common._jQuery_Event);
