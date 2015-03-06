@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # replace `buster-server` with proxy-enabling wrapper
-rm ./node_modules/.bin/buster-server && cp ./node_modules/buster-rendr-functional-tests/bin/buster-server ./node_modules/.bin/buster-server
+rm ./node_modules/.bin/buster-server && cp ./node_modules/buster-functional/bin/buster-server ./node_modules/.bin/buster-server
