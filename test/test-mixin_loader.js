@@ -41,6 +41,9 @@ buster.testCase('Loader',
   {
     setUp: function()
     {
+      // fake runner.on()
+      this._handlers = {};
+
       // fake framset object
       this.targetFrameset = {rows: '_UNMODIFIED_'};
       // stub DOM methods
@@ -51,8 +54,8 @@ buster.testCase('Loader',
       // stub document.cookie
       this.document = {cookie: '_UNMODIFIED_'};
 
-      // stub test runner object
-      this.runner = {on: this.spy()};
+      // mock test runner object
+      this.runner = {on: function(event, handler){ this._handlers[event] = handler; }.bind(this)};
 
       // expose local document
       global.document = this.document;
@@ -61,7 +64,7 @@ buster.testCase('Loader',
       global.window = {top: {document: {getElementsByTagName: this.stubGetElementsByTagName}}};
 
       // stub global busterFunctionalMixin
-      global.busterFunctionalMixin = {me: Math.random()};
+      global.busterFunctionalMixin = this.spy();
 
       // provide runner object to the onCreate callback
       this.stubBuster.testRunner.onCreate.getCall(0).callArgWith(0, this.runner);
@@ -70,17 +73,28 @@ buster.testCase('Loader',
     'Attaches test runner event listners': function()
     {
       // it assigns handler for several events
-      assert.calledWith(this.runner.on, 'suite:start');
-      assert.calledWith(this.runner.on, 'suite:end');
-      assert.calledWith(this.runner.on, 'context:end');
+      assert.isTrue('suite:start' in this._handlers);
+      assert.isTrue('suite:end' in this._handlers);
+      assert.isTrue('context:end' in this._handlers);
       // attaches the mixin to the runner setup
-      assert.calledWith(this.runner.on, 'test:setUp', global.busterFunctionalMixin);
+      assert.isTrue('test:setUp' in this._handlers);
+    },
+
+    'Calls mixin on test:setUp': function()
+    {
+      var testCase = {me: Math.random()};
+
+      // invoke test subject
+      this._handlers['test:setUp'](testCase);
+
+      // functionalMixin
+      assert.calledWith(global.busterFunctionalMixin, testCase);
     },
 
     'Resizes frames on suite:start': function()
     {
-      // first one is 'suite:start'
-      this.runner.on.getCall(0).callArg(1);
+      // invoke test subject
+      this._handlers['suite:start']();
 
       // check frameset selection
       assert.calledWith(this.stubGetElementsByTagName, 'frameset');
@@ -90,8 +104,8 @@ buster.testCase('Loader',
 
     'Resizes frames on suite:end': function()
     {
-      // second one is 'suite:end'
-      this.runner.on.getCall(1).callArg(1);
+      // invoke test subject
+      this._handlers['suite:end']();
 
       // check frameset selection
       assert.calledWith(this.stubGetElementsByTagName, 'frameset');
@@ -101,8 +115,8 @@ buster.testCase('Loader',
 
     'Cleans up buster_contextPath cookie on suite:end': function()
     {
-      // second one is 'suite:end'
-      this.runner.on.getCall(1).callArg(1);
+      // invoke test subject
+      this._handlers['suite:end']();
 
       // top iframe set to 80px
       assert.equals(this.document.cookie, common.cookieExpired);
@@ -110,8 +124,8 @@ buster.testCase('Loader',
 
     'Cleans up buster_contextPath cookie on context:end': function()
     {
-      // third one is 'context:end'
-      this.runner.on.getCall(2).callArg(1);
+      // invoke test subject
+      this._handlers['context:end']();
 
       // top iframe set to 80px
       assert.equals(this.document.cookie, common.cookieExpired);

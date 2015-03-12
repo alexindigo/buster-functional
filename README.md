@@ -262,6 +262,31 @@ setUp: function(done)
 }
 ```
 
+## Rendr
+
+For Rendr based application you need to wait for the `App` object
+to be instantiated, before proceeding to the tests.
+
+Following example shows possible setUp function to use with Rendr-based sites.
+
+```javascript
+
+setUp: function(done)
+{
+  this.load(url).waitForVar('App', function()
+  {
+    // expose App to the tests
+    this.App = this.window.App;
+    // set App as event root
+    this._setEventRoot(this.window.App);
+    // proceed with the tests
+    done();
+
+  }.bind(this));  
+}
+
+```
+
 ## PhantomJS
 
 At the moment PhantomJS uses older version of webkit
