@@ -164,7 +164,7 @@ Simulates selecting option within dropdown, with all related events and proper t
 }
 ```
 
-### .wait([event], callback)
+### .wait(event, callback)
 
 Waits for the application level events (`$(document)` by default), if no `window.$` is available, waits until it's resolved (via `this._eventRoot`).
 
@@ -188,7 +188,7 @@ Waits for the application level events (`$(document)` by default), if no `window
 }
 ```
 
-### .waitForTransition(selector|element, [callback])
+### .waitForTransition(selector|element, callback)
 
 Waits for CSS Transition to finish, triggers provided callback after that.
 
@@ -215,7 +215,7 @@ Waits for CSS Transition to finish, triggers provided callback after that.
 }
 ```
 
-### .waitForText(selector|element, text, [callback])
+### .waitForText(selector|element, text, callback)
 
 Waits for element to show up on the page and contain provided text.
 Better to use with selectors rather than elements,
@@ -238,6 +238,53 @@ to allow it to catch newly created elements.
       done();
     });
   });
+}
+
+```
+
+### .waitForElement(selector, callback)
+
+Waits for element to show up on the page.
+
+```javascript
+'Lazy loads property information': function(done)
+{
+  this.click('[data-action=loadInfo]', function()
+  {
+    // need to wait for all the autocomplete requests to be resolved
+    this.waitForElement('[data-role=propertyInformation]', function()
+    {
+      // Check first line of autosuggest
+      // should contain "Palo Alto, CA"
+      assert.contains(this.$('[data-role=propertyInformation]').text(), 'Home Details');
+
+      done();
+    });
+  });
+}
+
+```
+
+### .waitForVar(variable, callback)
+
+Waits for variable to be defined.
+
+```javascript
+// wait for App to be initialized on page load
+setUp: function(done)
+{
+  // load new homepage for each test
+  this.load(url)
+    .enhance(common.es5Shim)
+    .waitForVar('App', function()
+    {
+      // expose App to the tests
+      this.App = this.window.App;
+      // set App as event root
+      this._setEventRoot(this.window.App);
+      // get back to the tests
+      done();
+    }.bind(this));
 }
 
 ```

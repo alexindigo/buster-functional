@@ -1,6 +1,6 @@
 {
   "name": "buster-functional",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Functional tests extension for BusterJS. Adds helper functions to simulate basic user interactions",
   "main": "index.js",
   "scripts": {

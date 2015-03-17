@@ -50,7 +50,7 @@ buster.testCase('select',
       setTimeout(function()
       {
         // target's value shoud contain text
-        assert.equals(target[0].selectIndex, optionIndex);
+        assert.equals(target[0].selectedIndex, optionIndex);
         // callback been called
         assert.calledOnce(callback);
         // and be done
