@@ -140,7 +140,7 @@ function busterFunctionalMixin(testCase, options)
     return this;
   };
 
-  // Waits for varibable to be defined
+  // Waits for variable to be defined
   testCase.waitForVar = function busterFunctionalMixin_waitForVar(variable, callback)
   {
     // check if target element exists
