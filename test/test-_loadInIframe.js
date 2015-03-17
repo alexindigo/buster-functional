@@ -126,6 +126,16 @@ buster.testCase('_loadInIframe',
       assert.equals(this.testObject.window, this._stubs.window);
       assert.equals(this.testObject.document, this._stubs.document);
       assert.equals(this.testObject.$, this._stubs.$);
+    },
+
+    'Throws an exception if $ is not defined on the iframe': function()
+    {
+      assert.exception(function()
+      {
+        this._stubs.$ = undefined;
+        this._stubs.$.withArgs(this._stubs.document).returns(undefined);
+        this.testObject._loadInIframe(common.iframeUriPath, this._stubs.callback);
+      }.bind(this));
     }
   }
 });
