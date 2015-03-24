@@ -85,6 +85,7 @@ var common =
     target.focus = this.stub();
 
     target.first = this.stub().returns(target);
+    target.slice = this.stub().returns(target);
 
     return target;
   },
