@@ -18,7 +18,8 @@ buster.testCase('waitForTransition',
 
     this.testObject.waitForTransition(target, callback);
 
-    var transitionEvents = target.one.args[0][0];
+    // get all the transitionEndEvents namespace
+    var transitionEvents = target.one.getCall(0).args[0];
 
     // listens once
     assert.calledWith(target.one, transitionEvents);
@@ -33,9 +34,11 @@ buster.testCase('waitForTransition',
 
     this.testObject.waitForTransition(target, callback);
 
-    var transitionEvents = target.one.args[0][0];
+    // get all the transitionEndEvents namespace
+    var transitionEvents = target.one.getCall(0).args[0];
 
     target.one.getCall(0).callArg(1);
+
     // assert off is called once with transition events
     assert.calledOnceWith(target.off, transitionEvents);
   },
