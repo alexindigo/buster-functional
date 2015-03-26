@@ -18,24 +18,46 @@ buster.testCase('waitForTransition',
 
     this.testObject.waitForTransition(target, callback);
 
+    // get all the transitionEndEvents namespace
+    var transitionEvents = target.one.getCall(0).args[0];
+
     // listens once
-    assert.calledWith(target.one, this.testObject._transitionEndEvents);
+    assert.calledWith(target.one, transitionEvents);
     refute.called(target.on);
+  },
+
+  'Turns off target transitions events after one time attachment on the target element': function()
+  {
+    var target = {one: this.spy(), on: this.spy(), off: this.spy()}
+      , callback = this.spy()
+      ;
+
+    this.testObject.waitForTransition(target, callback);
+
+    // get all the transitionEndEvents namespace
+    var transitionEvents = target.one.getCall(0).args[0];
+
+    target.one.getCall(0).callArg(1);
+
+    // assert off is called once with transition events
+    assert.calledOnceWith(target.off, transitionEvents);
   },
 
   'Passes callback as delayed callback': function()
   {
-    var target = {one: this.spy()}
+    var target = {one: this.spy(), off: this.spy()}
       , callback = this.spy()
       ;
 
-    this.stub(this.testObject._delayedCallback, 'bind');
+    this.stub(this.testObject._delayedCallback, 'call');
 
     // invoke test subject
     this.testObject.waitForTransition(target, callback);
 
+    target.one.getCall(0).callArg(1);
+
     // bound callback as first argument to the _delayedCallback
-    assert.calledWith(this.testObject._delayedCallback.bind, this.testObject, callback);
+    assert.calledWith(this.testObject._delayedCallback.call, this.testObject, callback);
   },
 
   'Works with selectors beside jQuery object': function()
