@@ -18,6 +18,8 @@ buster.testCase('checkbox',
 
     // stub _triggerEvents
     this.stub(this.testObject, '_triggerEvents');
+
+    // invoke test object
     this.testObject.checkbox(target, callback);
 
     // get only the first element of the list
@@ -32,9 +34,12 @@ buster.testCase('checkbox',
     // only after proper timeout
     setTimeout(function()
     {
+      // triggerEvents for selectCheckbox method
       this.testObject._triggerEvents.getCall(0).args[1][1][7](target);
 
+      // triggerEvents for callback method
       this.testObject._triggerEvents.getCall(0).args[3]();
+
       // Invoked _triggerEvents
       assert.calledWithMatch(this.testObject._triggerEvents, target, common.matchEventsList.bind(this, eventsList));
 
@@ -42,9 +47,12 @@ buster.testCase('checkbox',
       {
         // assert target checked is correctly set
         assert.equals(target[0].checked, true);
+
         // callback been called
         assert.calledOnce(callback);
+
         done();
+
       }.bind(this), this.testObject._delay);
     }.bind(this), this.testObject._delay);
   },
@@ -93,6 +101,7 @@ buster.testCase('checkbox',
 
     // Don't go too deep
     this.stub(this.testObject, '_trigger');
+
     // return event type instead of full object
     this.stub(this.testObject, '_createEvent').returnsArg(0);
 
