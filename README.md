@@ -164,6 +164,24 @@ Simulates selecting option within dropdown, with all related events and proper t
 }
 ```
 
+### .checkbox(selector|target, [callback])
+
+Simulates tapping checkbox input, with all related events and proper timing.
+
+```javascript
+'set property checked on input checkbox': function(done)
+{
+  var checkboxElement = this.$('input[type=checkbox]');
+
+  this.checkbox(checkboxElement, function()
+  {
+    // Check input checkbox property checked is set to true
+    assert.isTrue(checkboxElement.prop('checked'));
+    done();
+  });
+}
+```
+
 ### .wait(event, callback)
 
 Waits for the application level events (`$(document)` by default), if no `window.$` is available, waits until it's resolved (via `this._eventRoot`).
