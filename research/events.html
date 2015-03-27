@@ -13,6 +13,8 @@
 
    <p>Select: <select id="the_select"><option value="a">A</option><option value="b">B</option><option value="c">C</option></select></p>
 
+   <p>Checkbox: <input type="checkbox" id="the_checkbox" name="the_checkbox" /></p>
+
   <script>
 
     // UI Events
@@ -59,29 +61,17 @@
     // listen on objects
     listen('the_link', allEvents, function(event)
     {
-      console.log('sync event', event.type);
-      setTimeout(function()
-      {
-        console.log('........... async event', event.type);
-      }, 0);
+      printEvents(event);
     });
 
     listen('the_button', allEvents, function(event)
     {
-      console.log('sync event', event.type);
-      setTimeout(function()
-      {
-        console.log('........... async event', event.type);
-      }, 0);
+      printEvents(event);
     });
 
     listen('the_input', allEvents, function(event)
     {
-      console.log('sync event', event.type, this.value);
-      setTimeout(function()
-      {
-        console.log('........... async event', event.type, this.value);
-      }.bind(this), 0);
+      printEvents(event);
     });
 
     listen('the_select', allEvents, function(event)
@@ -90,6 +80,15 @@
       setTimeout(function()
       {
         console.log('........... async event', event.type, this.value, this.selectedIndex, this.options[this.selectedIndex].value);
+      }.bind(this), 0);
+    });
+
+    listen('the_checkbox', allEvents, function(event)
+    {
+      console.log('sync event', event.type, this.checked);
+      setTimeout(function()
+      {
+        console.log('........... async event', event.type, this.checked);
       }.bind(this), 0);
     });
 
@@ -122,6 +121,15 @@
           console.log('\n\n++ ', e+':', typeof target[e], '\n\n');
         }
       });
+    }
+
+    function printEvents(event)
+    {
+      console.log('sync event', event.type);
+      setTimeout(function()
+      {
+        console.log('........... async event', event.type);
+      }.bind(this), 0);
     }
 
   </script>
