@@ -182,6 +182,27 @@ Simulates tapping checkbox input, with all related events and proper timing.
 }
 ```
 
+### .multipleCheckbox(selector|target, [callback])
+
+Simulates tapping of multiple input checkboxes, with all related events and proper timing.
+
+```javascript
+'set property checked on multiple input checkbox': function(done)
+{
+  var multipleCheckboxElements = this.$('[data-el=multipleCheckboxes] > input[type=checkbox]');
+
+  this.checkbox(multipleCheckboxElements, function()
+  {
+    for(var i = 0; i < multipleCheckboxElements.length; i++)
+    {
+      // Check input checkbox property checked is set to true
+      assert.isTrue(multipleCheckboxElements[i].prop('checked'));
+    }
+    done();
+  });
+}
+```
+
 ### .wait(event, callback)
 
 Waits for the application level events (`$(document)` by default), if no `window.$` is available, waits until it's resolved (via `this._eventRoot`).
