@@ -128,14 +128,27 @@ buster.testCase('_loadInIframe',
       assert.equals(this.testObject.$, this._stubs.$);
     },
 
-    'Throws an exception if $ is not defined on the iframe': function()
+    'Handles the case of $ not defined':
     {
-      assert.exception(function()
+      setUp: function()
       {
-        this._stubs.$ = undefined;
-        this._stubs.$.withArgs(this._stubs.document).returns(undefined);
+        this._stubs.iframe.contentWindow = {$: undefined};
         this.testObject._loadInIframe(common.iframeUriPath, this._stubs.callback);
-      }.bind(this));
+      },
+
+      'Throws an exception if $ is not defined in the iframe': function()
+      {
+        assert.exception(function()
+        {
+          this._stubs.iframe.onload();
+        }.bind(this), {message: 'The iframe was not loaded correctly, please double check that the url you requested is available in your test: '});
+      },
+
+      tearDown: function()
+      {
+        //restore the original stub
+        this._stubs.iframe = {contentWindow: this._stubs.window, contentDocument: this._stubs.document};
+      }
     }
   }
 });
