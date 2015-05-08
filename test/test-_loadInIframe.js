@@ -136,18 +136,18 @@ buster.testCase('_loadInIframe',
         this.testObject._loadInIframe(common.iframeUriPath, this._stubs.callback);
       },
 
+      tearDown: function()
+      {
+        //restore the original stub
+        this._stubs.iframe.contentWindow = this._stubs.window;
+      },
+
       'Throws an exception if $ is not defined in the iframe': function()
       {
         assert.exception(function()
         {
           this._stubs.iframe.onload();
         }.bind(this), {message: 'The iframe was not loaded correctly, please double check that the url you requested is available in your test: '});
-      },
-
-      tearDown: function()
-      {
-        //restore the original stub
-        this._stubs.iframe = {contentWindow: this._stubs.window, contentDocument: this._stubs.document};
       }
     }
   }
