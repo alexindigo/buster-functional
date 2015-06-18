@@ -304,6 +304,22 @@ Waits for element to show up on the page.
 
 ```
 
+
+### .waitForElementToContain(selector|element, callback)
+
+Waits for the element to have some content.
+
+```javascript
+'Has the google ad loaded': function(done)
+{
+  this.waitForElementToContain('[data-role="page_first_ad"]', function() {
+    assert.contains(this.$('[data-role="page_first_ad"]').find('div:first').attr('id'), 'google_ads_iframe_');
+    done();
+  });
+}
+
+```
+
 ### .waitForVar(variable, callback)
 
 Waits for variable to be defined.
