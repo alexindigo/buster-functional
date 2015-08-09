@@ -2,7 +2,6 @@ var buster = require('buster')
   , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
-  , testObject
   ;
 
 buster.testCase('_once',
@@ -47,7 +46,6 @@ buster.testCase('_once',
   {
     var oneTimer
       , context  = {id: Math.random()}
-      , result   = {me: Math.random()}
       , callback = this.stub()
       ;
 

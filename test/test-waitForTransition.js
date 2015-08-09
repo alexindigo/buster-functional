@@ -2,7 +2,6 @@ var buster = require('buster')
   , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
-  , testObject
   ;
 
 buster.testCase('waitForTransition',

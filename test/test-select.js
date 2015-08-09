@@ -2,7 +2,6 @@ var buster = require('buster')
   , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
-  , testObject
   ;
 
 buster.testCase('select',
@@ -66,7 +65,6 @@ buster.testCase('select',
       , selector   = 'Me selector' + Math.random()
       , target      = common.createTargetElement.call(this)
       , option      = 'B'
-      , optionIndex = 1
       , callback    = this.spy()
       ;
 

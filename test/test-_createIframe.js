@@ -1,8 +1,7 @@
 var buster = require('buster')
   , common = require('./common')
   , assert = buster.referee.assert
-  , refute = buster.referee.refute
-  , testObject
+//  , refute = buster.referee.refute
   ;
 
 buster.testCase('_createIframe',

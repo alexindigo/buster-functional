@@ -2,7 +2,6 @@ var buster = require('buster')
   , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
-  , testObject
   ;
 
 buster.testCase('waitForElementToContain',
@@ -97,7 +96,7 @@ buster.testCase('waitForElementToContain',
 
     // don't invoke setTimeout, just check it gets all we need
     this.stub(global, 'setTimeout');
-    
+
     // no need to invoke real bind either
     this.stub(this.testObject.waitForElementToContain, 'bind').returns(boundItself);
 
