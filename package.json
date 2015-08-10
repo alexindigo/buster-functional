@@ -1,20 +1,27 @@
 {
   "name": "buster-functional",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Functional tests extension for BusterJS. Adds helper functions to simulate basic user interactions",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/buster-test --fail-on-focus --reporter specification"
+    "test": "./node_modules/.bin/buster-test --reporter specification",
+    "testsuite": "./node_modules/.bin/buster-test --fail-on-focus --reporter brief",
+    "coverage": "codeclimate-test-reporter < ./coverage/lcov.info; codacy-coverage < ./coverage/lcov.info; true"
   },
+  "pre-commit": [
+    "testsuite"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/alexindigo/buster-functional.git"
   },
   "devDependencies": {
-    "buster": "~0.7.18",
-    "buster-istanbul": "^0.1.13",
-    "coveralls": "^2.11.2",
-    "pre-commit": "^1.0.3"
+    "buster": "^0.7.18",
+    "buster-istanbul": "^0.1.15",
+    "codacy-coverage": "^1.1.2",
+    "codeclimate-test-reporter": "^0.1.0",
+    "coveralls": "^2.11.3",
+    "pre-commit": "^1.1.1"
   },
   "keywords": [
     "buster",

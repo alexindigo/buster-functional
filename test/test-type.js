@@ -2,7 +2,6 @@ var buster = require('buster')
   , common = require('./common')
   , assert = buster.referee.assert
   , refute = buster.referee.refute
-  , testObject
   ;
 
 buster.testCase('type',
@@ -92,8 +91,7 @@ buster.testCase('type',
 
   'Works with selectors beside jQuery object': function(done)
   {
-    var eventsList = [['keydown', 'keypress', '[Function: addChar]', 'input'], 'keyup']
-      , selector   = 'Me selector' + Math.random()
+    var selector   = 'Me selector' + Math.random()
       , target     = common.createTargetElement.call(this)
       , text       = 'abc'
       , callback   = this.spy()

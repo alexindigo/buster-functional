@@ -1,7 +1,7 @@
 var buster = require('buster')
   , common = require('./common')
   , assert = buster.referee.assert
-  , refute = buster.referee.refute
+//  , refute = buster.referee.refute
   ;
 
 buster.testCase('_createEvent',
@@ -11,8 +11,7 @@ buster.testCase('_createEvent',
 
   'Routes keydown event with provided extra': function()
   {
-    var event
-      , type = 'keydown'
+    var type = 'keydown'
       , char = 'k'
       ;
 
@@ -28,8 +27,7 @@ buster.testCase('_createEvent',
 
   'Routes touchstart event with provided extra': function()
   {
-    var event
-      , type = 'touchstart'
+    var type = 'touchstart'
       , target = common.createTargetElement.call(this)
       ;
 
@@ -45,8 +43,7 @@ buster.testCase('_createEvent',
 
   'Routes mouseup event with provided extra': function()
   {
-    var event
-      , type = 'mouseup'
+    var type = 'mouseup'
       , target = common.createTargetElement.call(this)
       ;
 
@@ -62,8 +59,7 @@ buster.testCase('_createEvent',
 
   'Routes click event with provided extra': function()
   {
-    var event
-      , type = 'click'
+    var type = 'click'
       , target = common.createTargetElement.call(this)
       ;
 
@@ -77,10 +73,25 @@ buster.testCase('_createEvent',
     assert.calledWith(this.testObject._createMouseEvent, type, target);
   },
 
+  'Routes change event': function()
+  {
+    var type = 'change'
+      , target = common.createTargetElement.call(this)
+      ;
+
+    // route click to the mouse event handler
+    this.stub(this.testObject, '_createGenericEvent');
+
+    // invoke test subject
+    this.testObject._createEvent(type, target);
+
+    // since no extend function is present check it's arguments
+    assert.calledWith(this.testObject._createGenericEvent, type);
+  },
+
   'Routes focus event': function()
   {
-    var event
-      , type = 'focus'
+    var type = 'focus'
       , target = common.createTargetElement.call(this)
       ;
 
@@ -96,8 +107,7 @@ buster.testCase('_createEvent',
 
   'Routes DOMFocusOut event': function()
   {
-    var event
-      , type = 'DOMFocusOut'
+    var type = 'DOMFocusOut'
       , target = common.createTargetElement.call(this)
       ;
 
@@ -113,8 +123,7 @@ buster.testCase('_createEvent',
 
   'Throws on unrecognized event type': function()
   {
-    var event
-      , type = 'unrecognized'
+    var type = 'unrecognized'
       , target = common.createTargetElement.call(this)
       ;
 

@@ -2,5 +2,13 @@ language: node_js
 node_js:
   - "0.10"
   - "0.12"
+  - "iojs"
 after_script:
   - "cat coverage/lcov.info | ./node_modules/.bin/coveralls"
+notifications:
+  webhooks:
+    urls:
+      - "https://webhooks.gitter.im/e/ee2712a158f74d3cac89"
+    on_success: change
+    on_failure: always
+    on_start: false

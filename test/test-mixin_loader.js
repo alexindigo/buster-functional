@@ -2,9 +2,8 @@ var path   = require('path')
   , buster = require('buster')
   , common = require('./common')
   , assert = buster.referee.assert
-  , refute = buster.referee.refute
+//  , refute = buster.referee.refute
   , loaderFile = '../lib/mixin_loader.js'
-  , testObject
   ;
 
 buster.testCase('Loader',
