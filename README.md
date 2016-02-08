@@ -1,5 +1,7 @@
 # buster-functional [![Build Status](https://img.shields.io/travis/alexindigo/buster-functional/master.svg?style=flat-square)](https://travis-ci.org/alexindigo/buster-functional) [![Coverage Status](https://img.shields.io/coveralls/alexindigo/buster-functional/master.svg?style=flat-square)](https://coveralls.io/r/alexindigo/buster-functional?branch=master)
 
+[![Join the chat at https://gitter.im/alexindigo/buster-functional](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alexindigo/buster-functional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Functional tests extension for BusterJS. Adds helper functions to simulate basic user interactions.
 
 *Expects: [jQuery](http://jquery.com) to be present on the test target page.*
